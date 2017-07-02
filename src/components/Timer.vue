@@ -17,9 +17,6 @@
           Stop timer
         </v-btn>
       </div>
-
-
-
     </div>
   </div>
 </template>
