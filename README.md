@@ -2,6 +2,13 @@
 
 > Timer app for Code Shops
 
+### Features to implement
+- [ ] Set an amount of time to count to
+- [ ] Countdown the timer
+- [ ] Notify the user when timer ends
+- [ ] Randomize the timer amount
+- [ ] Choose different sounds when the timer ends
+
 ## Build Setup
 
 ``` bash
