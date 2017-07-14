@@ -7,14 +7,27 @@
       </div>
       <div class="timer-buttons">
         <v-btn light
+               v-if="timerValue === 0"
                class="btn--light-flat-focused timer-button timer-button--start"
                v-on:click.native="startTimer()">
-          Start timer
+          Start
         </v-btn>
         <v-btn light
+               v-else-if="paused"
+               class="btn--light-flat-focused timer-button timer-button--start"
+               v-on:click.native="startTimer()">
+          Resume
+        </v-btn>
+        <v-btn light
+               v-else
                class="btn--light-flat-focused timer-button timer-button--stop"
-               v-on:click.native="stopTimer()">
-          Stop timer
+               v-on:click.native="pauseTimer()">
+          Pause
+        </v-btn>
+        <v-btn light
+               class="btn--light-flat-focused timer-button timer-button--reset"
+               v-on:click.native="resetTimer()">
+          Reset
         </v-btn>
       </div>
     </div>
@@ -22,6 +35,9 @@
 </template>
 
 <script>
+import * as TimerWorker from './../../workers/worker';
+
+const timerWorker = new TimerWorker();
 
 export default {
   name: 'timer',
@@ -31,34 +47,43 @@ export default {
       milliseconds: '00',
       seconds: '00',
       minutes: '00',
+      paused: false,
       intervalObject: {},
     };
   },
-  watch: {
-    timerValue(val) {
-      this.milliseconds = this.doubleDigitChecker(`${val % 100}`);
-      this.seconds = this.calculateSeconds(val);
-      this.minutes = this.calculateMinutes(val);
-    },
+  mounted() {
+    timerWorker.onmessage = (event) => {
+      const {
+        timerValue,
+        milliseconds,
+        seconds,
+        minutes,
+      } = event.data;
+
+      this.timerValue = timerValue;
+      this.milliseconds = milliseconds;
+      this.seconds = seconds;
+      this.minutes = minutes;
+    };
+  },
+  destroyed() {
+    timerWorker.terminate();
   },
   methods: {
     startTimer() {
-      this.stopTimer();
-      this.intervalObject = setInterval(() => {
-        this.timerValue += 1;
-      }, 10);
+      this.paused = false;
+
+      timerWorker.postMessage({ startTimer: true, message: this.timerValue });
     },
-    stopTimer() {
-      clearInterval(this.intervalObject);
+    pauseTimer() {
+      this.paused = true;
+
+      timerWorker.postMessage({ startTimer: false });
     },
-    doubleDigitChecker(value) {
-      return value.length === 1 ? `0${value}` : value;
-    },
-    calculateSeconds(milliseconds) {
-      return this.doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
-    },
-    calculateMinutes(milliseconds) {
-      return this.doubleDigitChecker(`${milliseconds / 6000}`.split('.')[0]);
+    resetTimer() {
+      this.paused = false;
+
+      timerWorker.postMessage({ resetTimer: true });
     },
   },
 };
@@ -92,6 +117,7 @@ export default {
     margin: 20px;
     height: 20vw;
     font-size: 5vw;
+    color: white;
   }
 
   .timer-button--start {
@@ -100,5 +126,9 @@ export default {
 
   .timer-button--stop {
     background-color: rgb(153, 9, 9);
+  }
+
+  .timer-button--reset {
+    background-color: rgb(49, 160, 255);
   }
 </style>
