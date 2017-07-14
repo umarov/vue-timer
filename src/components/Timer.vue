@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import * as TimerWorker from './../../workers/worker';
+// eslint-disable-next-line
+import * as TimerWorker from 'worker-loader!../../workers/timer.worker';
 
 const timerWorker = new TimerWorker();
 

@@ -28,9 +28,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.worker\.js$/,
         loader: 'worker-loader',
-        include: [resolve('workers')]
+        include: [
+          path.resolve(__dirname, "worker")
+        ]
+        // include: [resolve('workers')]
       },
       {
         test: /\.(js|vue)$/,
