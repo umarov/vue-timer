@@ -119,7 +119,7 @@ export default {
   .timer-content {
     display: flex;
     flex-direction: column;
-    align-content: center;
+    align-items: center;
   }
 
   .timer-content__values {
