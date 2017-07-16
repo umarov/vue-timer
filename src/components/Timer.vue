@@ -1,7 +1,7 @@
 <template>
   <div class="timer-content">
-    <timer-input></timer-input>
-    <timer-display :timer-amount="6000"></timer-display>
+    <timer-input v-if="!timerAmount" v-on:timer-amount-set="timerAmountSet"></timer-input>
+    <timer-display v-if="timerAmount && timerAmount > 0" :timer-amount="timerAmount" v-on:change-timer-value="onChangeTimerValue"></timer-display>
   </div>
 </template>
 
@@ -17,12 +17,7 @@
     },
     data() {
       return {
-        timerValue: 0,
-        milliseconds: '00',
-        seconds: '00',
-        minutes: '00',
-        paused: false,
-        intervalObject: {},
+        timerAmount: null,
       };
     },
     mounted() {
@@ -31,6 +26,12 @@
     destroyed() {
     },
     methods: {
+      timerAmountSet(value) {
+        this.timerAmount = value;
+      },
+      onChangeTimerValue() {
+        this.timerAmount = null;
+      },
     },
   };
 </script>

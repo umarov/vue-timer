@@ -1,20 +1,28 @@
 <template>
   <div id="timer">
+    <v-container fluid>
+      <v-layout row justify-space-around class="text-xs-center">
+        <v-flex>
+          <v-btn outline flat primary v-on:click.native="onChangeTimerValue()">Change timer value</v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
     <div class="timer">
       <div class="timer-content">
         <v-progress-circular
-          v-bind:size="300"
+          v-bind:size="progressSize"
           v-bind:width="15"
           v-bind:rotate="-90"
-          v-bind:value="(timerValue / timerAmount) * 100"
-          class="primary--text timer-content__circular-progress"
-        >
-          {{ minutes }}:{{ seconds }}:{{ milliseconds }}
+          v-bind:value="(progressAmount / timerAmount) * 100"
+          class="primary--text timer-content__circular-progress ">
+          <span class="timer-content__values">
+            {{ minutes }}:{{ seconds }}:{{ milliseconds }}
+          </span>
         </v-progress-circular>
       </div>
       <div class="timer-buttons">
         <v-btn light
-               v-if="timerValue === 0"
+               v-if="timerValue === timerAmount"
                class="btn--light-flat-focused timer-button timer-button--start"
                v-on:click.native="startTimer()">
           Start
@@ -22,7 +30,7 @@
         <v-btn light
                v-else-if="paused"
                class="btn--light-flat-focused timer-button timer-button--start"
-               v-on:click.native="startTimer()">
+               v-on:click.native="resumeTimer()">
           Resume
         </v-btn>
         <v-btn light
@@ -45,7 +53,7 @@
 // eslint-disable-next-line
 import * as TimerWorker from 'worker-loader!../../workers/timer.worker';
 
-const timerWorker = new TimerWorker();
+let timerWorker;
 
 export default {
   name: 'timer-display',
@@ -54,6 +62,8 @@ export default {
   ],
   data() {
     return {
+      progressSize: '100',
+      progressAmount: 0,
       timerValue: 0,
       milliseconds: '00',
       seconds: '00',
@@ -63,6 +73,7 @@ export default {
     };
   },
   mounted() {
+    timerWorker = new TimerWorker();
     timerWorker.onmessage = (event) => {
       if (!document.hidden) {
         requestAnimationFrame(() => {
@@ -73,27 +84,57 @@ export default {
             minutes,
           } = event.data;
 
-          this.timerValue = timerValue;
-          this.milliseconds = milliseconds;
-          if (this.seconds !== seconds) {
-            this.seconds = seconds;
-          }
+          if (timerValue === 0) {
+            this.resetTimer();
+          } else {
+            this.timerValue = timerValue;
+            this.progressAmount = this.timerValue;
 
-          if (this.minutes !== minutes) {
-            this.minutes = minutes;
+            this.milliseconds = milliseconds;
+            if (this.seconds !== seconds) {
+              this.seconds = seconds;
+            }
+
+            if (this.minutes !== minutes) {
+              this.minutes = minutes;
+            }
           }
         });
       }
     };
+
+    const matchUpdater = mediaQueryList => (size) => {
+      if (mediaQueryList.matches) { this.progressSize = size; }
+    };
+
+    const mediaQueryLists = [
+      { query: window.matchMedia('(min-width: 950px)'), size: '550' },
+      { query: window.matchMedia('(max-width: 949px)'), size: '450' },
+      { query: window.matchMedia('(min-width: 600px)'), size: '450' },
+      { query: window.matchMedia('(max-width: 599px)'), size: '300' },
+    ];
+
+    mediaQueryLists.map(mqlObj => mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)));
+    mediaQueryLists.map(mqlObj => matchUpdater.bind(this)(mqlObj.query)(mqlObj.size));
+
+    timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
+    this.paused = false;
+    document.querySelector('.progress-circular__overlay').style.transition = 'none';
   },
   destroyed() {
+    this.resetTimer();
     timerWorker.terminate();
   },
   methods: {
     startTimer() {
       this.paused = false;
 
-      timerWorker.postMessage({ startTimer: true, message: this.timerValue });
+      timerWorker.postMessage({ startTimer: true, timerAmount: this.timerAmount });
+    },
+    resumeTimer() {
+      this.paused = false;
+
+      timerWorker.postMessage({ startTimer: true, timerAmount: this.timerValue });
     },
     pauseTimer() {
       this.paused = true;
@@ -103,7 +144,10 @@ export default {
     resetTimer() {
       this.paused = false;
 
-      timerWorker.postMessage({ resetTimer: true });
+      timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
+    },
+    onChangeTimerValue() {
+      this.$emit('change-timer-value');
     },
   },
 };
@@ -125,8 +169,53 @@ export default {
   .timer-content__values {
     flex: 1;
     text-align: center;
-    font-size: 15vw;
     font-weight: 200;
+  }
+
+  @media (min-width: 1200px) {
+    .timer {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .timer-buttons {
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .timer-button {
+      width: 200px;
+    }
+
+    .timer-content {
+      flex: 2;
+    }
+
+    .timer-content__values {
+      font-size: 100px;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .timer-buttons {
+      justify-content: space-between;
+    }
+
+    .timer-button {
+      width: 33vw;
+    }
+
+    .timer-content__values {
+      font-size: calc(10% + 9vw);
+    }
+  }
+
+  .timer-content__circular-progress {
+    flex: 1;
+    margin: 20px;
+    width: 15vw;
+    height: 15vw;
   }
 
   .timer-buttons {
@@ -134,7 +223,7 @@ export default {
   }
 
   .timer-button {
-    flex: 1;
+    height: 50px;
     margin: 20px;
     color: white;
   }
@@ -151,9 +240,6 @@ export default {
     background-color: rgb(49, 160, 255);
   }
 
-  .timer-content__circular-progress {
-    flex: 1;
-    margin: 20px;
-  }
+
 </style>
 

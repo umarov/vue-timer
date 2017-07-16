@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <v-toolbar dark>
-      <v-toolbar-side-icon></v-toolbar-side-icon>
       <v-toolbar-title>Code Shop Timer</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>

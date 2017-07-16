@@ -11,17 +11,23 @@ self.onmessage = (event) => {
 
   if (data.startTimer) {
     clearInterval(intervalId);
+    timerValue = event.data.timerAmount;
     intervalId = setInterval(() => {
-      timerValue += 1;
+      timerValue -= 1;
+
       postMessage({
         timerValue,
         milliseconds: doubleDigitChecker(`${timerValue % 100}`),
         seconds: calculateSeconds(timerValue),
         minutes: calculateMinutes(timerValue),
       });
+
+      if (timerValue < 1) {
+        clearInterval(intervalId);
+      }
     }, 10);
   } else if (data.resetTimer) {
-    timerValue = 0;
+    timerValue = event.data.timerAmount;
 
     postMessage({
       timerValue,
