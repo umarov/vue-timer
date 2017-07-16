@@ -1,13 +1,14 @@
-var path = require('path')
-var utils = require('./utils')
-var webpack = require('webpack')
-var config = require('../config')
-var merge = require('webpack-merge')
+var path              = require('path')
+var utils             = require('./utils')
+var webpack           = require('webpack')
+var config            = require('../config')
+var merge             = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+var workboxPlugin     = require('workbox-webpack-plugin');
 
 var env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -94,7 +95,12 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new workboxPlugin({
+      globDirectory: config.build.assetsRoot,
+      globPatterns: ['**/*.{html,js,css}'],
+      swDest: path.join(config.build.assetsRoot, 'sw.js'),
+    })
   ]
 })
 
