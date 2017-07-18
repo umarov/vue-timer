@@ -6,6 +6,46 @@
           <v-btn outline flat primary v-on:click.native="onChangeTimerValue()">Change timer value</v-btn>
         </v-flex>
       </v-layout>
+      <v-layout row center justify-space-around class="text-xs-center">
+        <v-flex>
+          <v-btn outline
+                 flat
+                 primary
+                 v-on:click.native="subscribeForNotifications()"
+                 v-if="notificationAllowed"
+                 class="green--text">
+                 Nofitications & Sound: On
+                 <v-icon>notifications</v-icon>
+          </v-btn>
+          <v-btn outline
+                 flat
+                 primary
+                 v-on:click.native="subscribeForNotifications()"
+                 v-else-if="notificationPermission === 'default'"
+                 class="grey--text">
+                 Nofitications & Sound: Need permission
+                 <v-icon>notifications_off</v-icon>
+          </v-btn>
+          <v-btn outline
+                 flat
+                 primary
+                 v-on:click.native="subscribeForNotifications()"
+                 v-else-if="notificationPermission === 'denied'"
+                 class="grey--text">
+                 Nofitications & Sound: Denied
+                 <v-icon>notifications_off</v-icon>
+          </v-btn>
+          <v-btn outline
+                 flat
+                 primary
+                 v-on:click.native="subscribeForNotifications()"
+                 v-else
+                 class="red--text">
+                 Nofitications & Sound: Off
+                 <v-icon>notifications_none</v-icon>
+          </v-btn>
+        </v-flex>
+      </v-layout>
     </v-container>
     <div class="timer">
       <div class="timer-content">
@@ -52,6 +92,10 @@
 <script>
 // eslint-disable-next-line
 import * as TimerWorker from 'worker-loader!../../workers/timer.worker';
+import sound from '../assets/audio/foghorn-daniel_simon.mp3';
+
+const audio = new Audio(sound);
+audio.volume = 0.5;
 
 let timerWorker;
 
@@ -69,10 +113,20 @@ export default {
       seconds: '00',
       minutes: '00',
       paused: false,
+      notificationPermission: Notification.permission,
+      notificationAllowed: false,
       intervalObject: {},
     };
   },
   mounted() {
+    if (this.notificationPermission === 'denied') {
+      this.notificationAllowed = false;
+    } else if (this.notificationPermission === 'default') {
+      this.notificationAllowed = false;
+    } else {
+      this.notificationAllowed = true;
+    }
+
     timerWorker = new TimerWorker();
     timerWorker.onmessage = (event) => {
       if (!document.hidden) {
@@ -85,6 +139,10 @@ export default {
           } = event.data;
 
           if (timerValue === 0) {
+            if (this.notificationAllowed) {
+              audio.play();
+            }
+
             this.resetTimer();
           } else {
             this.timerValue = timerValue;
@@ -103,7 +161,7 @@ export default {
       }
     };
 
-    const matchUpdater = mediaQueryList => (size) => {
+    const matchUpdater = size => (mediaQueryList) => {
       if (mediaQueryList.matches) { this.progressSize = size; }
     };
 
@@ -115,7 +173,7 @@ export default {
     ];
 
     mediaQueryLists.map(mqlObj => mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)));
-    mediaQueryLists.map(mqlObj => matchUpdater.bind(this)(mqlObj.query)(mqlObj.size));
+    mediaQueryLists.map(mqlObj => matchUpdater.bind(this)(mqlObj.size)(mqlObj.query));
 
     timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
     this.paused = false;
@@ -127,9 +185,15 @@ export default {
   },
   methods: {
     startTimer() {
+      audio.pause();
+      audio.currentTime = 0;
       this.paused = false;
 
-      timerWorker.postMessage({ startTimer: true, timerAmount: this.timerAmount });
+      timerWorker.postMessage({
+        startTimer: true,
+        timerAmount: this.timerAmount,
+        notificationAllowed: this.notificationAllowed,
+      });
     },
     resumeTimer() {
       this.paused = false;
@@ -148,6 +212,14 @@ export default {
     },
     onChangeTimerValue() {
       this.$emit('change-timer-value');
+    },
+    subscribeForNotifications() {
+      Notification.requestPermission((permission) => {
+        // If the user accepts, let's create a notification
+        if (permission === 'granted') {
+          this.notificationAllowed = !this.notificationAllowed;
+        }
+      });
     },
   },
 };
