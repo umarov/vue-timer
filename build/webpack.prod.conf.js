@@ -99,6 +99,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     new workboxPlugin({
       globDirectory: config.build.assetsRoot,
       globPatterns: ['**/*.{html,js,css}'],
+      swSrc: './src/service-worker.js',
       swDest: path.join(config.build.assetsRoot, 'sw.js'),
     })
   ]

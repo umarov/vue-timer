@@ -1,48 +1,60 @@
 importScripts('workbox-sw.prod.v2.1.0.js');
 
-/**
- * DO NOT EDIT THE FILE MANIFEST ENTRY
- *
- * The method precache() does the following:
- * 1. Cache URLs in the manifest to a local cache.
- * 2. When a network request is made for any of these URLs the response
- *    will ALWAYS comes from the cache, NEVER the network.
- * 3. When the service worker changes ONLY assets with a revision change are
- *    updated, old cache entries are left as is.
- *
- * By changing the file manifest manually, your users may end up not receiving
- * new versions of files because the revision hasn't changed.
- *
- * Please use workbox-build or some other tool / approach to generate the file
- * manifest which accounts for changes to local files and update the revision
- * accordingly.
- */
-const fileManifest = [
+const workboxSW = new self.WorkboxSW();
+workboxSW.precache([
   {
     "url": "a63c9fe9110431fcfb67.worker.js",
     "revision": "80f748dac84cdcdbafd50d115586aac2"
   },
   {
     "url": "index.html",
-    "revision": "97c02bae709a41d7c1dcf5e681ace5ca"
+    "revision": "abd130ba34969ce4e618b382cfbacac6"
   },
   {
-    "url": "static/css/app.313da12e54b733b8d3fd7726dc86dfc0.css",
-    "revision": "3da40477bdc78a62d870602f03468303"
+    "url": "static/css/app.72b36e31879f0cf26ac95ec3706e9333.css",
+    "revision": "c36a2daad244fa1fce13a9609fa1d6f6"
   },
   {
-    "url": "static/js/app.d895e6a51357495c410f.js",
-    "revision": "df1f4c324c0e69d5e7789eb4d1be45f6"
+    "url": "static/js/0.0dd47f8e7b012f570541.js",
+    "revision": "14e7575fcc79ba8f2247850a4673bd2c"
   },
   {
-    "url": "static/js/manifest.f539458008177e2d403d.js",
-    "revision": "0ce7d8ff5c40e9d50d38fe8882e17a6a"
+    "url": "static/js/1.0fc292535d26f6e99661.js",
+    "revision": "7516754626915d752ec2d644efea3efe"
   },
   {
-    "url": "static/js/vendor.fd51db52efbaf092466a.js",
-    "revision": "d12c47dd2c108964e2f574a1be716928"
+    "url": "static/js/2.a4e326554f5ea2e7f215.js",
+    "revision": "6de4b7c0ab92dbfa4e1e7e33f7ceb2f6"
+  },
+  {
+    "url": "static/js/app.15ad61c7078da14babcc.js",
+    "revision": "7ed70e7685f3895da71209544b9d55c1"
+  },
+  {
+    "url": "static/js/manifest.957920914ce849e8932c.js",
+    "revision": "0ab2d10fee6d614409319e38cb20712f"
+  },
+  {
+    "url": "static/js/vendor.8ea825429446008651cf.js",
+    "revision": "aee7a5a36fda45c78377fa6bc0cc426d"
+  },
+  {
+    "url": "sw.js",
+    "revision": "4c06f2eb771988f92bc945ee256e8558"
+  },
+  {
+    "url": "workbox-sw.prod.v2.1.0.js",
+    "revision": "e5f207838d7fd9c81835d5705a73cfa2"
   }
-];
+]);
 
-const workboxSW = new self.WorkboxSW();
-workboxSW.precache(fileManifest);
+workboxSW.router.registerRoute(
+  'https://fonts.googleapis.com/(.*)',
+  workboxSW.strategies.cacheFirst({
+    cacheName: 'googleapis',
+    cacheExpiration: {
+      maxEntries: 20
+    },
+    cacheableResponse: {statuses: [0, 200]}
+  })
+);
