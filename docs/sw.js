@@ -10,6 +10,17 @@ workboxSW.router.registerRoute('https://fonts.googleapis.com/(.*)',
     networkTimeoutSeconds: 4
   })
 );
+
+workboxSW.router.registerRoute('https://fonts.gstatic.com/(.*)',
+  workboxSW.strategies.cacheFirst({
+    cacheName: 'gstatic',
+    cacheableResponse: {
+      statuses: [0, 200]
+    },
+    networkTimeoutSeconds: 4
+  })
+);
+
 workboxSW.precache([
   {
     "url": "a63c9fe9110431fcfb67.worker.js",
@@ -49,7 +60,7 @@ workboxSW.precache([
   },
   {
     "url": "sw.js",
-    "revision": "cdebd3b1e9d359c40ee10028c88289e3"
+    "revision": "41fe2602c1a67ac02a312e32a34c9a96"
   },
   {
     "url": "workbox-sw.prod.v2.1.0.js",

@@ -10,5 +10,16 @@ workboxSW.router.registerRoute('https://fonts.googleapis.com/(.*)',
     networkTimeoutSeconds: 4
   })
 );
+
+workboxSW.router.registerRoute('https://fonts.gstatic.com/(.*)',
+  workboxSW.strategies.cacheFirst({
+    cacheName: 'gstatic',
+    cacheableResponse: {
+      statuses: [0, 200]
+    },
+    networkTimeoutSeconds: 4
+  })
+);
+
 workboxSW.precache([]);
 

@@ -94,6 +94,11 @@ var webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
+      },
+      {
+        from: path.resolve(__dirname, '../manifest.json'),
+        to: config.build.assetsRoot,
+        ignore: ['.*']
       }
     ]),
     new workboxPlugin({
