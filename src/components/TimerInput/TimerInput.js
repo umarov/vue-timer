@@ -108,7 +108,7 @@ export default {
         timerAmountInMillis += this.minutes * 6000;
       }
 
-      this.$emit('timer-amount-set', timerAmountInMillis);
+      this.$router.push({ name: 'timer-display', params: { timerAmount: timerAmountInMillis } });
     },
   },
 };
