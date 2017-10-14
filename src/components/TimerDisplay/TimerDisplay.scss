@@ -1,0 +1,84 @@
+.timer {
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-content__values {
+  flex: 1;
+  text-align: center;
+  font-weight: 200;
+}
+
+@media (min-width: 1200px) {
+  .timer {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .timer-buttons {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .timer-button {
+    width: 200px;
+  }
+
+  .timer-content {
+    flex: 2;
+  }
+
+  .timer-content__values {
+    font-size: 100px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .timer-buttons {
+    justify-content: space-between;
+  }
+
+  .timer-button {
+    width: 33vw;
+  }
+
+  .timer-content__values {
+    font-size: calc(10% + 9vw);
+  }
+}
+
+.timer-content__circular-progress {
+  flex: 1;
+  margin: 20px;
+  width: 15vw;
+  height: 15vw;
+}
+
+.timer-buttons {
+  display: flex;
+}
+
+.timer-button {
+  height: 50px;
+  margin: 20px;
+  color: white;
+}
+
+.timer-button--start {
+  background-color: rgb(27, 208, 27);
+}
+
+.timer-button--stop {
+  background-color: rgb(153, 9, 9);
+}
+
+.timer-button--reset {
+  background-color: rgb(49, 160, 255);
+}
