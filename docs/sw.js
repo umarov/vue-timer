@@ -17,7 +17,7 @@ workboxSW.precache([
   },
   {
     "url": "index.html",
-    "revision": "933e4158374d0eca640b06764d29499c"
+    "revision": "c5e76166b9e5a1f7a4454f2bb6c09f40"
   },
   {
     "url": "static/css/app.72b36e31879f0cf26ac95ec3706e9333.css",
@@ -49,7 +49,7 @@ workboxSW.precache([
   },
   {
     "url": "sw.js",
-    "revision": "794cb93d7baeba64bd5667b6f7a6a582"
+    "revision": "cdebd3b1e9d359c40ee10028c88289e3"
   },
   {
     "url": "workbox-sw.prod.v2.1.0.js",
