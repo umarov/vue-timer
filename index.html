@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="manifest" href="manifest.json">
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
     <title>code-shop-timer</title>
   </head>
   <body>
@@ -18,8 +18,9 @@
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').then(function(registration) {
           console.log('Service Worker registered');
-        }).catch(function() {
+        }).catch(function(e) {
           console.log('Service Worker registration failed');
+          console.error(e);
         });
       }
     </script>

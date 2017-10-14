@@ -1,6 +1,15 @@
 importScripts('workbox-sw.prod.v2.1.0.js');
-
 const workboxSW = new self.WorkboxSW();
+
+workboxSW.router.registerRoute('https://fonts.googleapis.com/(.*)',
+  workboxSW.strategies.cacheFirst({
+    cacheName: 'googleapis',
+    cacheableResponse: {
+      statuses: [0, 200]
+    },
+    networkTimeoutSeconds: 4
+  })
+);
 workboxSW.precache([
   {
     "url": "a63c9fe9110431fcfb67.worker.js",
@@ -8,7 +17,7 @@ workboxSW.precache([
   },
   {
     "url": "index.html",
-    "revision": "abd130ba34969ce4e618b382cfbacac6"
+    "revision": "933e4158374d0eca640b06764d29499c"
   },
   {
     "url": "static/css/app.72b36e31879f0cf26ac95ec3706e9333.css",
@@ -40,7 +49,7 @@ workboxSW.precache([
   },
   {
     "url": "sw.js",
-    "revision": "4c06f2eb771988f92bc945ee256e8558"
+    "revision": "794cb93d7baeba64bd5667b6f7a6a582"
   },
   {
     "url": "workbox-sw.prod.v2.1.0.js",
@@ -48,13 +57,3 @@ workboxSW.precache([
   }
 ]);
 
-workboxSW.router.registerRoute(
-  'https://fonts.googleapis.com/(.*)',
-  workboxSW.strategies.cacheFirst({
-    cacheName: 'googleapis',
-    cacheExpiration: {
-      maxEntries: 20
-    },
-    cacheableResponse: {statuses: [0, 200]}
-  })
-);
