@@ -1,88 +1,63 @@
 <template>
   <div id="timer">
-    <v-container fluid>
-      <v-layout row justify-space-around class="text-xs-center">
-        <v-flex>
-          <v-btn outline flat v-on:click.native="onChangeTimerValue()">Change timer value</v-btn>
-        </v-flex>
-      </v-layout>
-      <v-layout row center justify-space-around class="text-xs-center">
-        <v-flex>
-          <v-btn outline
-                 flat
-                 color="green"
-                 v-on:click.native="subscribeForNotifications()"
-                 v-if="notificationAllowed"
-                 class="green--text">
-                 Nofitications & Sound: On
-                 <v-icon>notifications</v-icon>
-          </v-btn>
-          <v-btn outline
-                 flat
-                 color="green"
-                 v-on:click.native="subscribeForNotifications()"
-                 v-else-if="notificationPermission === 'default'"
-                 class="grey--text">
-                 Nofitications & Sound: Need permission
-                 <v-icon>notifications_off</v-icon>
-          </v-btn>
-          <v-btn outline
-                 flat
-                 color="green"
-                 v-on:click.native="subscribeForNotifications()"
-                 v-else-if="notificationPermission === 'denied'"
-                 class="grey--text">
-                 Nofitications & Sound: Denied
-                 <v-icon>notifications_off</v-icon>
-          </v-btn>
-          <v-btn outline
-                 flat
-                 color="green"
-                 v-on:click.native="subscribeForNotifications()"
-                 v-else
-                 class="red--text">
-                 Nofitications & Sound: Off
-                 <v-icon>notifications_none</v-icon>
-          </v-btn>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <v-toolbar class="green" dark>
+      <v-btn icon dark v-on:click="goBack">
+        <v-icon color="white">arrow_back</v-icon>
+      </v-btn>
+      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+
+    <timer-notification v-on:notification-state="allowNotification"></timer-notification>
     <div class="timer">
+      <div class="timer-content__values green--text">
+        {{ minutes }}:{{ seconds }}:{{ milliseconds }}
+      </div>
       <div class="timer-content">
         <v-progress-circular
-          v-bind:size="progressSize"
-          v-bind:width="15"
+          v-bind:size="200"
+          v-bind:width="5"
           v-bind:rotate="-90"
+          color="green"
           v-bind:value="(progressAmount / timerAmount) * 100"
           class="primary--text timer-content__circular-progress ">
-          <span class="timer-content__values">
-            {{ minutes }}:{{ seconds }}:{{ milliseconds }}
-          </span>
         </v-progress-circular>
       </div>
       <div class="timer-buttons">
         <v-btn light
-               v-if="timerValue === timerAmount"
-               class="btn--light-flat-focused timer-button timer-button--start"
-               v-on:click.native="startTimer()">
-          Start
+                fab
+                outline
+                color="blue"
+                class="btn--light-flat-focused white--text timer-button"
+                v-on:click.native="resetTimer()">
+          <v-icon>loop</v-icon>
         </v-btn>
         <v-btn light
-               v-else-if="paused"
-               class="btn--light-flat-focused timer-button timer-button--start"
-               v-on:click.native="resumeTimer()">
-          Resume
+                fab
+                outline
+                color="green"
+                v-if="timerValue === timerAmount"
+                class="btn--light-flat-focused white--text timer-button"
+                v-on:click.native="startTimer()">
+          <v-icon>play_circle_outline</v-icon>
         </v-btn>
         <v-btn light
-               v-else
-               class="btn--light-flat-focused timer-button timer-button--stop"
-               v-on:click.native="pauseTimer()">
-          Pause
+                fab
+                outline
+                color="green"
+                v-else-if="paused"
+                class="btn--light-flat-focused white--text timer-button"
+                v-on:click.native="resumeTimer()">
+          <v-icon>play_circle_filled</v-icon>
         </v-btn>
         <v-btn light
-               class="btn--light-flat-focused timer-button timer-button--reset"
-               v-on:click.native="resetTimer()">
-          Reset
+                fab
+                outline
+                color="red"
+                v-else
+                class="btn--light-flat-focused white--text timer-button"
+                v-on:click.native="pauseTimer()">
+          <v-icon>pause_circle_outline</v-icon>
         </v-btn>
       </div>
     </div>

@@ -9,6 +9,9 @@ let timerWorker;
 
 export default {
   name: 'timer-display',
+  components: {
+    'timer-notification': () => import('./TimerNotification/TimerNotification.vue'),
+  },
   props: [
     'timerAmount',
   ],
@@ -21,20 +24,11 @@ export default {
       seconds: '00',
       minutes: '00',
       paused: false,
-      notificationPermission: Notification.permission,
-      notificationAllowed: false,
       intervalObject: {},
     };
   },
   mounted() {
-    if (this.notificationPermission === 'denied') {
-      this.notificationAllowed = false;
-    } else if (this.notificationPermission === 'default') {
-      this.notificationAllowed = false;
-    } else {
-      this.notificationAllowed = true;
-    }
-
+    this.notificationAllowed = false;
     timerWorker = new TimerWorker();
     timerWorker.onmessage = (event) => {
       if (!document.hidden) {
@@ -74,10 +68,14 @@ export default {
     };
 
     const mediaQueryLists = [
-      { query: window.matchMedia('(min-width: 950px)'), size: '550' },
+      { query: window.matchMedia('(min-width: 950px)'), size: '600' },
       { query: window.matchMedia('(max-width: 949px)'), size: '450' },
       { query: window.matchMedia('(min-width: 600px)'), size: '450' },
-      { query: window.matchMedia('(max-width: 599px)'), size: '300' },
+      { query: window.matchMedia('(max-width: 599px)'), size: '400' },
+      { query: window.matchMedia('(min-width: 426px)'), size: '380' },
+      { query: window.matchMedia('(max-width: 425px)'), size: '350' },
+      { query: window.matchMedia('(min-width: 321px)'), size: '280' },
+      { query: window.matchMedia('(max-width: 320px)'), size: '250' },
     ];
 
     mediaQueryLists.map(mqlObj => mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)));
@@ -92,6 +90,9 @@ export default {
     timerWorker.terminate();
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     startTimer() {
       audio.pause();
       audio.currentTime = 0;
@@ -118,16 +119,8 @@ export default {
 
       timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
     },
-    onChangeTimerValue() {
-      this.$emit('change-timer-value');
-    },
-    subscribeForNotifications() {
-      Notification.requestPermission((permission) => {
-        // If the user accepts, let's create a notification
-        if (permission === 'granted') {
-          this.notificationAllowed = !this.notificationAllowed;
-        }
-      });
+    allowNotification(notificationValue) {
+      this.notificationAllowed = notificationValue;
     },
   },
 };

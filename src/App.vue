@@ -1,12 +1,9 @@
 <template>
   <div id="app">
-    <v-toolbar class="green" dark>
-      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
     <div class="app-content">
       <router-view></router-view>
     </div>
+
     <v-tabs class="bottom-tabs" v-model="activeTab" light fixed icons centered>
       <v-tabs-bar class="green">
         <v-tabs-slider color="yellow"></v-tabs-slider>
@@ -50,11 +47,6 @@ body {
   overflow-y: hidden;
 }
 
-#app {
-  height: 100vh;
-  width: 100vw;
-}
-
 v-tabs-item {
   color: white;
 }
@@ -67,6 +59,5 @@ v-tabs-item {
 .app-content {
   font-family: 'Roboto', monospace;
   color: #2c3e50;
-  margin-bottom: 70px;
 }
 </style>

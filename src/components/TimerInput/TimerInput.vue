@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-toolbar class="green" dark>
+      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+
     <div class="time-values">
       <v-container fluid>
         <v-layout row justify-space-around class="text-xs-center">

@@ -108,7 +108,9 @@ export default {
         timerAmountInMillis += this.minutes * 6000;
       }
 
-      this.$router.push({ name: 'timer-display', params: { timerAmount: timerAmountInMillis } });
+      if (timerAmountInMillis > 0) {
+        this.$router.push({ name: 'timer-display', params: { timerAmount: timerAmountInMillis } });
+      }
     },
   },
 };
