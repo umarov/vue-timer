@@ -90,9 +90,6 @@ export default {
     timerWorker.terminate();
   },
   methods: {
-    goBack() {
-      this.$router.go(-1);
-    },
     startTimer() {
       audio.pause();
       audio.currentTime = 0;

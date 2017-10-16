@@ -5,7 +5,7 @@
   "background_color": "#1bd01b",
   "display": "standalone",
   "Scope": "/",
-  "start_url": "/",
+  "start_url": "/code-shop-timer",
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",

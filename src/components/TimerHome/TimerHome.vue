@@ -1,10 +1,5 @@
 <template>
   <div>
-    <v-toolbar class="green" dark>
-      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
-
     <h4>Welcome to Timer Home</h4>
     <p>This allows you to set timers and be notified when they are finished</p>
     <p>The timer runs in a Web Worker in the background and sends a notification once it's once</p>

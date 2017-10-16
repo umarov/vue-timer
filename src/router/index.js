@@ -14,6 +14,10 @@ export default new Router({
       path: '/',
       name: 'home',
       component: TimerHome,
+      meta: {
+        showBackButton: false,
+        showBottomBar: true,
+      },
     },
     {
       path: '/timer',
@@ -23,12 +27,20 @@ export default new Router({
           path: '/',
           name: 'timer',
           component: TimerInput,
+          meta: {
+            showBackButton: false,
+            showBottomBar: true,
+          },
         },
         {
           path: '/display/:timerAmount',
           name: 'timer-display',
           component: TimerDisplay,
           props: true,
+          meta: {
+            showBackButton: true,
+            showBottomBar: false,
+          },
         },
       ],
     },

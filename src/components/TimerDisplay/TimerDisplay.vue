@@ -1,13 +1,5 @@
 <template>
   <div id="timer">
-    <v-toolbar class="green" dark>
-      <v-btn icon dark v-on:click="goBack">
-        <v-icon color="white">arrow_back</v-icon>
-      </v-btn>
-      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
-
     <timer-notification v-on:notification-state="allowNotification"></timer-notification>
     <div class="timer">
       <div class="timer-content__values green--text">
@@ -15,7 +7,7 @@
       </div>
       <div class="timer-content">
         <v-progress-circular
-          v-bind:size="200"
+          v-bind:size="300"
           v-bind:width="5"
           v-bind:rotate="-90"
           color="green"
