@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 body {
   overflow-x: hidden;
   overflow-y: hidden;
@@ -77,5 +77,10 @@ v-tabs-item {
 .app-content {
   font-family: 'Roboto', monospace;
   color: #2c3e50;
+}
+
+.animated {
+  animation-duration: 299ms;
+  will-change: transform;
 }
 </style>

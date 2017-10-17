@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="timer-container animated fadeInDown">
     <router-view></router-view>
   </div>
 </template>
@@ -12,4 +12,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .timer-container {
+    display: grid;
+  }
 </style>

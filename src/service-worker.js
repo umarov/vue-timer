@@ -21,5 +21,15 @@ workboxSW.router.registerRoute('https://fonts.gstatic.com/(.*)',
   })
 );
 
+workboxSW.router.registerRoute('https://cdnjs.cloudflare.com/ajax/libs/animate.css(.*)',
+  workboxSW.strategies.cacheFirst({
+    cacheName: 'gstatic',
+    cacheableResponse: {
+      statuses: [0, 200]
+    },
+    networkTimeoutSeconds: 4
+  })
+);
+
 workboxSW.precache([]);
 

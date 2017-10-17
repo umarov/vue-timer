@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="timer-input">
     <div class="time-values">
       <v-container fluid>
         <v-layout row justify-space-around class="text-xs-center">
@@ -87,11 +87,11 @@
       <v-container fluid>
         <v-layout row justify-space-around class="text-xs-center">
           <v-flex xs6>
-            <v-btn outline flat class="red--text" v-on:click.native="resetValues()">Reset</v-btn>
+            <v-btn flat class="red--text" v-on:click.native="resetValues()">Reset</v-btn>
           </v-flex>
 
           <v-flex xs6>
-            <v-btn outline flat color="green" v-on:click.native="onTimerAmountSet()">Prepare timer</v-btn>
+            <v-btn raised class="white--text" color="green" v-on:click.native="onTimerAmountSet()">Prepare timer</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -105,5 +105,11 @@
 <style scoped>
   .time-values {
     font-size: 30px;
+  }
+
+  #timer-input {
+    display: grid;
+    grid-template-rows: 30% 30% 30%;
+    grid-row-gap: 15px;
   }
 </style>

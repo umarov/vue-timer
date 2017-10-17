@@ -1,5 +1,5 @@
 <template>
-  <div id="timer">
+  <div id="timer" class="animated slideInUp">
     <timer-notification v-on:notification-state="allowNotification"></timer-notification>
     <div class="timer">
       <div class="timer-content__values green--text">
@@ -11,8 +11,9 @@
           v-bind:width="5"
           v-bind:rotate="-90"
           color="green"
+          v-bind:class="{ pulse: paused }"
           v-bind:value="(progressAmount / timerAmount) * 100"
-          class="primary--text timer-content__circular-progress ">
+          class="primary--text timer-content__circular-progress animated infinite">
         </v-progress-circular>
       </div>
       <div class="timer-buttons">

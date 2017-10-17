@@ -1,8 +1,13 @@
 .timer {
   display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
 }
 
-.timer-content {
+#timer {
+  display: grid;
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
 }
 
 .timer-content__values {
@@ -37,6 +42,7 @@
 
 .timer-content__circular-progress {
   justify-content: center;
+  animation-duration: 1s;
 }
 
 .timer-buttons {
