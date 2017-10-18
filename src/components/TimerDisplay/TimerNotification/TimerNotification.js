@@ -7,14 +7,7 @@ export default {
     };
   },
   mounted() {
-    if (this.notificationPermission === 'denied') {
-      this.notificationAllowed = false;
-    } else if (this.notificationPermission === 'default') {
-      this.notificationAllowed = false;
-    } else {
-      this.notificationAllowed = this.getCachedOverride();
-    }
-
+    this.notificationAllowed = Notification.permission === 'granted' && this.getCachedOverride();
     this.$emit('notification-state', this.notificationAllowed);
   },
   methods: {

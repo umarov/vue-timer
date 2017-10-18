@@ -28,6 +28,8 @@ export default {
     };
   },
   mounted() {
+
+
     this.notificationAllowed = false;
     timerWorker = new TimerWorker();
     timerWorker.onmessage = (event) => {

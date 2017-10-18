@@ -9,26 +9,10 @@ const doubleDigitChecker = (value) => { return value.length === 1 ? `0${value}` 
 const calculateSeconds = milliseconds => doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
 
 const calculateMinutes = milliseconds => doubleDigitChecker(`${milliseconds / 6000}`.split('.')[0]);
+const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
+const restartBroadcastChannel = new BroadcastChannel('timerRestart');
 
-function showNotification(timerAmount, notificationAllowed) {
-  notification = new Notification('Timer Ended', {
-    body: 'Click to restart the timer',
-    icon: timerIcon,
-    vibrate: [200, 100, 200, 100, 200, 100, 400],
-    tag: 'request',
-  });
 
-  notification.addEventListener('click', () => {
-    dispatchEvent(new CustomEvent('timerstart', {
-      detail: {
-        timerAmount,
-        notificationAllowed,
-      },
-    }));
-  });
-
-  setTimeout(notification.close.bind(notification), 7000);
-}
 
 function startTimer(timerAmount, notificationAllowed) {
   timerValue = timerAmount;
@@ -38,32 +22,38 @@ function startTimer(timerAmount, notificationAllowed) {
   }
 
   return setInterval(() => {
-    timerValue -= 1;
+    if (timerValue < 2) {
+      timerValue = 0;
 
-    postMessage({
-      timerValue,
-      milliseconds: doubleDigitChecker(`${timerValue % 100}`),
-      seconds: calculateSeconds(timerValue),
-      minutes: calculateMinutes(timerValue),
-    });
+      if (Notification.permission === 'granted' && notificationAllowed) {
+        notificationBroadcastChannel.postMessage(timerAmount);
+      }
 
-    if (timerValue < 1 && Notification.permission === 'granted' && notificationAllowed) {
-      dispatchEvent(new CustomEvent('timernotification', {
-        detail: {
-          timerAmount,
-          notificationAllowed,
-        },
-      }));
+      postMessage({
+        timerValue,
+        milliseconds: doubleDigitChecker(`${timerValue % 100}`),
+        seconds: calculateSeconds(timerValue),
+        minutes: calculateMinutes(timerValue),
+      });
+      clearInterval(intervalId);
+    } else {
+      timerValue -= 1;
+
+      postMessage({
+        timerValue,
+        milliseconds: doubleDigitChecker(`${timerValue % 100}`),
+        seconds: calculateSeconds(timerValue),
+        minutes: calculateMinutes(timerValue),
+      });
     }
   }, 10);
 }
 
-self.addEventListener('timernotification', (event) => {
-  const { timerAmount, notificationAllowed } = event.detail;
+restartBroadcastChannel.onmessage = () => {
   clearInterval(intervalId);
 
-  showNotification(timerAmount, notificationAllowed);
-});
+  intervalId = startTimer(timerValue, true);
+}
 
 self.addEventListener('timerstart', (event) => {
   const { timerAmount, notificationAllowed } = event.detail;
@@ -73,7 +63,7 @@ self.addEventListener('timerstart', (event) => {
 });
 
 self.onmessage = (event) => {
-  const data = event.data;
+  const { data } = event;
 
   if (data.startTimer) {
     dispatchEvent(new CustomEvent('timerstart', {
