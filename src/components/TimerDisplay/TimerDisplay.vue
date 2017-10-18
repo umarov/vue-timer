@@ -1,6 +1,6 @@
 <template>
   <div id="timer" class="animated slideInUp">
-    <timer-notification v-on:notification-state="allowNotification"></timer-notification>
+    <timer-notification v-bind:timer-worker="timerWorker" v-on:notification-state="allowNotification"></timer-notification>
     <div class="timer">
       <div class="timer-content__values green--text">
         {{ minutes }}:{{ seconds }}:{{ milliseconds }}

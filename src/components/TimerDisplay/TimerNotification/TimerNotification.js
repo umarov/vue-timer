@@ -1,26 +1,73 @@
 export default {
   name: 'timer-notification',
+  props: {
+    timerWorker: {
+      type: Worker,
+    },
+  },
   data() {
     return {
       notificationPermission: Notification.permission,
       notificationAllowed: null,
+      worker: this.timerWorker,
     };
   },
   mounted() {
-    this.notificationAllowed = Notification.permission === 'granted' && this.getCachedOverride();
-    this.$emit('notification-state', this.notificationAllowed);
+    window
+      .firebaseMessaging
+      .getToken()
+      .then((currentToken) => {
+        if (currentToken) {
+          this.sendTokenToWorker(currentToken);
+          this.notificationAllowed = this.getCachedOverride();
+        } else {
+          this.notificationAllowed = false;
+        }
+      })
+      .catch(() => {
+        this.notificationAllowed = false;
+      })
+      .then(() => {
+        this.$emit('notification-state', this.notificationAllowed);
+      });
+
+    window
+      .firebaseMessaging
+      .onTokenRefresh(() => {
+        window
+          .firebaseMessaging
+          .getToken()
+          .then((refreshedToken) => {
+            if (refreshedToken) {
+              this.sendTokenToWorker(refreshedToken);
+              this.notificationAllowed = this.getCachedOverride();
+            } else {
+              this.notificationAllowed = false;
+            }
+          })
+          .catch(() => {
+            this.notificationAllowed = false;
+          })
+          .then(() => {
+            this.$emit('notification-state', this.notificationAllowed);
+          });
+      });
   },
   methods: {
+    sendTokenToWorker(token) {
+      this.worker.postMessage({ setNotificationToken: true, notificationToken: token });
+    },
     subscribeForNotifications() {
-      Notification.requestPermission((permission) => {
-        // If the user accepts, let's create a notification
-        if (permission === 'granted') {
+      window
+        .firebaseMessaging
+        .requestPermission()
+        .then(() => {
           this.notificationAllowed = !this.notificationAllowed;
           this.setCachedOverride(this.notificationAllowed);
-        } else {
+        })
+        .catch(() => {
           this.setCachedOverride(false);
-        }
-      });
+        });
     },
     getCachedOverride() {
       return localStorage.getItem('notification-override') === 'true';

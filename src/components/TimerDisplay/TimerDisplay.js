@@ -5,8 +5,6 @@ import sound from '../../assets/audio/foghorn-daniel_simon.mp3';
 const audio = new Audio(sound);
 audio.volume = 0.5;
 
-let timerWorker;
-
 export default {
   name: 'timer-display',
   components: {
@@ -25,44 +23,44 @@ export default {
       minutes: '00',
       paused: false,
       intervalObject: {},
+      timerWorker: new TimerWorker(),
     };
   },
   mounted() {
-
+    document.addEventListener('visibilitychange', () => {
+      this.timerWorker.postMessage({ checkTimerValue: true });
+    });
 
     this.notificationAllowed = false;
-    timerWorker = new TimerWorker();
-    timerWorker.onmessage = (event) => {
-      if (!document.hidden) {
-        requestAnimationFrame(() => {
-          const {
-            timerValue,
-            milliseconds,
-            seconds,
-            minutes,
-          } = event.data;
+    this.timerWorker.onmessage = (event) => {
+      requestAnimationFrame(() => {
+        const {
+          timerValue,
+          milliseconds,
+          seconds,
+          minutes,
+        } = event.data;
 
-          if (timerValue === 0) {
-            if (this.notificationAllowed) {
-              audio.play();
-            }
-
-            this.resetTimer();
-          } else {
-            this.timerValue = timerValue;
-            this.progressAmount = this.timerValue;
-
-            this.milliseconds = milliseconds;
-            if (this.seconds !== seconds) {
-              this.seconds = seconds;
-            }
-
-            if (this.minutes !== minutes) {
-              this.minutes = minutes;
-            }
+        if (timerValue === 0) {
+          if (this.notificationAllowed) {
+            audio.play();
           }
-        });
-      }
+
+          this.resetTimer();
+        } else {
+          this.timerValue = timerValue;
+          this.progressAmount = this.timerValue;
+
+          this.milliseconds = milliseconds;
+          if (this.seconds !== seconds) {
+            this.seconds = seconds;
+          }
+
+          if (this.minutes !== minutes) {
+            this.minutes = minutes;
+          }
+        }
+      });
     };
 
     const matchUpdater = size => (mediaQueryList) => {
@@ -83,13 +81,13 @@ export default {
     mediaQueryLists.map(mqlObj => mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)));
     mediaQueryLists.map(mqlObj => matchUpdater.bind(this)(mqlObj.size)(mqlObj.query));
 
-    timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
+    this.timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
     this.paused = false;
     document.querySelector('.progress-circular__overlay').style.transition = 'none';
   },
   destroyed() {
     this.resetTimer();
-    timerWorker.terminate();
+    this.timerWorker.terminate();
   },
   methods: {
     startTimer() {
@@ -97,7 +95,7 @@ export default {
       audio.currentTime = 0;
       this.paused = false;
 
-      timerWorker.postMessage({
+      this.timerWorker.postMessage({
         startTimer: true,
         timerAmount: this.timerAmount,
         notificationAllowed: this.notificationAllowed,
@@ -106,17 +104,17 @@ export default {
     resumeTimer() {
       this.paused = false;
 
-      timerWorker.postMessage({ startTimer: true, timerAmount: this.timerValue });
+      this.timerWorker.postMessage({ startTimer: true, timerAmount: this.timerValue });
     },
     pauseTimer() {
       this.paused = true;
 
-      timerWorker.postMessage({ startTimer: false });
+      this.timerWorker.postMessage({ startTimer: false });
     },
     resetTimer() {
       this.paused = false;
 
-      timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
+      this.timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
     },
     allowNotification(notificationValue) {
       this.notificationAllowed = notificationValue;
