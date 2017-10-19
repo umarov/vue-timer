@@ -13,6 +13,7 @@ export default {
     };
   },
   mounted() {
+    window.firebaseMessaging.useServiceWorker(window.swRegistration);
     window
       .firebaseMessaging
       .getToken()
