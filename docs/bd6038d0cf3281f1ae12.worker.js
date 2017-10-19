@@ -75,6 +75,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 let intervalId = 0;
 let timerValue = 0;
+let timerEndTime = 0;
 let notification;
 let notificationToken;
 
@@ -94,6 +95,7 @@ function startTimer(timerAmount, notificationAllowed) {
   return setInterval(() => {
     if (timerValue < 2) {
       timerValue = 0;
+      timerEndTime = Date.now();
 
       if (Notification.permission === 'granted' && notificationAllowed) {
         makeRequestForPushNotification(timerAmount);
@@ -104,6 +106,7 @@ function startTimer(timerAmount, notificationAllowed) {
         milliseconds: doubleDigitChecker(`${timerValue % 100}`),
         seconds: calculateSeconds(timerValue),
         minutes: calculateMinutes(timerValue),
+        timerEndTime
       });
       clearInterval(intervalId);
     } else {
@@ -138,10 +141,12 @@ function makeRequestForPushNotification(timerAmount) {
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify({
-      notification: notificationPayload,
-      to: notificationToken
-    })
-  }).catch((response) => console.log(JSON.stringify(response)))
+      data: {
+        'json-data': JSON.stringify(notificationPayload),
+      },
+      to: notificationToken,
+    }),
+  }).catch(response => console.log(JSON.stringify(response)));
 }
 
 restartBroadcastChannel.onmessage = () => {
@@ -185,6 +190,7 @@ self.onmessage = (event) => {
       milliseconds: doubleDigitChecker(`${timerValue % 100}`),
       seconds: calculateSeconds(timerValue),
       minutes: calculateMinutes(timerValue),
+      timerEndTime
     });
   } else {
     clearInterval(intervalId);
@@ -200,4 +206,4 @@ module.exports = "data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgA
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=95a30d460e0e6b309753.worker.js.map
+//# sourceMappingURL=bd6038d0cf3281f1ae12.worker.js.map

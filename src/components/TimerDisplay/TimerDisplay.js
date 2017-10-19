@@ -21,6 +21,7 @@ export default {
       milliseconds: '00',
       seconds: '00',
       minutes: '00',
+      timerEndTime: 0,
       paused: false,
       intervalObject: {},
       timerWorker: new TimerWorker(),
@@ -34,8 +35,7 @@ export default {
     setTimeout(() => {
       window
         .firebaseMessaging
-        .onMessage((event) => {
-          console.log(event);
+        .onMessage(() => {
           this.resetTimer();
         });
     }, 100);
@@ -48,10 +48,12 @@ export default {
           milliseconds,
           seconds,
           minutes,
+          timerEndTime,
         } = event.data;
 
         if (timerValue === 0) {
-          if (this.notificationAllowed) {
+          const timeDiff = (Date.now() - timerEndTime) / 10;
+          if (this.notificationAllowed && timeDiff < 10) {
             audio.play();
           }
 

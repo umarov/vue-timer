@@ -133,7 +133,4 @@ const prepareAndSendNotification = () => {
   return self.registration.showNotification('Timer is up!', notificationPayload);
 };
 
-
-self.addEventListener('push', (event) => {
-  event.waitUntil(prepareAndSendNotification());
-});
+messaging.setBackgroundMessageHandler(prepareAndSendNotification);

@@ -2,6 +2,7 @@ import timerIcon from '../src/assets/img/favicon.ico';
 
 let intervalId = 0;
 let timerValue = 0;
+let timerEndTime = 0;
 let notification;
 let notificationToken;
 
@@ -21,6 +22,7 @@ function startTimer(timerAmount, notificationAllowed) {
   return setInterval(() => {
     if (timerValue < 2) {
       timerValue = 0;
+      timerEndTime = Date.now();
 
       if (Notification.permission === 'granted' && notificationAllowed) {
         makeRequestForPushNotification(timerAmount);
@@ -31,6 +33,7 @@ function startTimer(timerAmount, notificationAllowed) {
         milliseconds: doubleDigitChecker(`${timerValue % 100}`),
         seconds: calculateSeconds(timerValue),
         minutes: calculateMinutes(timerValue),
+        timerEndTime
       });
       clearInterval(intervalId);
     } else {
@@ -65,10 +68,12 @@ function makeRequestForPushNotification(timerAmount) {
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify({
-      notification: notificationPayload,
-      to: notificationToken
-    })
-  }).catch((response) => console.log(JSON.stringify(response)))
+      data: {
+        'json-data': JSON.stringify(notificationPayload),
+      },
+      to: notificationToken,
+    }),
+  }).catch(response => console.log(JSON.stringify(response)));
 }
 
 restartBroadcastChannel.onmessage = () => {
@@ -112,6 +117,7 @@ self.onmessage = (event) => {
       milliseconds: doubleDigitChecker(`${timerValue % 100}`),
       seconds: calculateSeconds(timerValue),
       minutes: calculateMinutes(timerValue),
+      timerEndTime
     });
   } else {
     clearInterval(intervalId);

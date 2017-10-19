@@ -68,12 +68,12 @@ workboxSW.router.registerRoute('https://cdnjs.cloudflare.com/ajax/libs/animate.c
 
 workboxSW.precache([
   {
-    "url": "95a30d460e0e6b309753.worker.js",
-    "revision": "df05ea0d4c2b98506167108b3cb45c35"
+    "url": "bd6038d0cf3281f1ae12.worker.js",
+    "revision": "d8ceac6efc2ffd639379e1eacb8cd870"
   },
   {
     "url": "index.html",
-    "revision": "719373fa2338840a1d5a92e457c0e98c"
+    "revision": "fe1955090137c2573a5c0b258c434963"
   },
   {
     "url": "static/css/app.4cbd75d60eb50db74b37959b15142bf1.css",
@@ -84,24 +84,24 @@ workboxSW.precache([
     "revision": "1a817ae67c845d2a8f4e48cce8b0cc54"
   },
   {
-    "url": "static/js/1.5aa49c6f37abef83a8b6.js",
-    "revision": "f1014a7b3b193f7ab748ff3405130a5b"
+    "url": "static/js/1.a97123e0e58e29b81507.js",
+    "revision": "569968bb90890b491cdc6f66713cff88"
   },
   {
     "url": "static/js/2.e3f3a914e9a866bb6ddf.js",
     "revision": "cd3777fa42166556e0c20a518e9cc5fc"
   },
   {
-    "url": "static/js/5.b2a67e5271793cfa9ba4.js",
-    "revision": "316f207f993a32284bbb1be48278cf2a"
+    "url": "static/js/5.e3f578064a4329777bd3.js",
+    "revision": "75cb6705be66b14a2e74e3afccb5a23f"
   },
   {
-    "url": "static/js/app.f20b1c63a35929f23539.js",
-    "revision": "fc7fad9ab0c251dc7692a14b162a19b1"
+    "url": "static/js/app.26431eb1697b321bba5a.js",
+    "revision": "d349940f796aba2475efb83af1ca3936"
   },
   {
-    "url": "static/js/manifest.25549ca10ba51d95ffec.js",
-    "revision": "db51b72350f354f20bfa17215480384c"
+    "url": "static/js/manifest.404fc09c435036d49fce.js",
+    "revision": "f3fecd0e770053bbd4c917652a76d2b7"
   },
   {
     "url": "static/js/vendor.f9e1237bb4adaa19ce1a.js",
@@ -174,7 +174,4 @@ const prepareAndSendNotification = () => {
   return self.registration.showNotification('Timer is up!', notificationPayload);
 };
 
-
-self.addEventListener('push', (event) => {
-  event.waitUntil(prepareAndSendNotification());
-});
+messaging.setBackgroundMessageHandler(prepareAndSendNotification);

@@ -13,7 +13,16 @@ export default {
     };
   },
   mounted() {
-    setTimeout(() => {
+    if (window.swRegistration) {
+      this.setupTokens();
+    } else {
+      document.addEventListener('serviceWorkerRegistered', () => {
+        this.setupTokens();
+      });
+    }
+  },
+  methods: {
+    setupTokens() {
       window
         .firebaseMessaging
         .getToken()
@@ -30,9 +39,7 @@ export default {
             .catch(this.notificationNotAllowed)
             .then(this.fireEventWithNotificationState);
         });
-    }, 100);
-  },
-  methods: {
+    },
     onTokenReceived(currentToken) {
       if (currentToken) {
         this.sendTokenToWorker(currentToken);
@@ -45,7 +52,10 @@ export default {
       this.notificationAllowed = false;
     },
     sendTokenToWorker(token) {
-      this.worker.postMessage({ setNotificationToken: true, notificationToken: token });
+      this.worker.postMessage({
+        setNotificationToken: true,
+        notificationToken: token,
+      });
     },
     fireEventWithNotificationState() {
       this.$emit('notification-state', this.getCachedOverride());
