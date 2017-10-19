@@ -73,6 +73,7 @@ let timerAmount;
 
 const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
 const restartBroadcastChannel = new BroadcastChannel('timerRestart');
+const timerValueBroadcastChannel = new BroadcastChannel('timerValue');
 
 
 notificationBroadcastChannel.onmessage = ({ data }) => {
@@ -110,11 +111,26 @@ self.addEventListener('notificationclick', (event) => {
   const { notification, action } = event;
 
   if (action === 'yes') {
-    restartBroadcastChannel.postMessage('restart');
+    let promise;
+    if (timerAmount) {
+      promise = openExistingWindow(self.location, self.clients, timerAmount);
+    } else {
+      promise = new Promise((resolve) => {
+        const timerNotifications = new BroadcastChannel('timerNotification');
 
-    event.waitUntil(openExistingWindow(self.location, self.clients, timerAmount));
+        timerNotifications.onmessage = ({ data }) => {
+          resolve(data);
+        };
 
-    notification.close();
+        timerValueBroadcastChannel.postMessage();
+      });
+    }
+
+    event.waitUntil(promise.then(() => {
+      restartBroadcastChannel.postMessage('restart');
+
+      notification.close();
+    }));
   }
 });
 

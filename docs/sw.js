@@ -68,12 +68,12 @@ workboxSW.router.registerRoute('https://cdnjs.cloudflare.com/ajax/libs/animate.c
 
 workboxSW.precache([
   {
-    "url": "bd6038d0cf3281f1ae12.worker.js",
-    "revision": "d8ceac6efc2ffd639379e1eacb8cd870"
+    "url": "b0159710b7f34b2f846e.worker.js",
+    "revision": "8fa35e7d5320f7c6901a2f9dc0af14ba"
   },
   {
     "url": "index.html",
-    "revision": "fe1955090137c2573a5c0b258c434963"
+    "revision": "0f691fd6fefb69228b510c28ce5c0290"
   },
   {
     "url": "static/css/app.4cbd75d60eb50db74b37959b15142bf1.css",
@@ -84,8 +84,8 @@ workboxSW.precache([
     "revision": "1a817ae67c845d2a8f4e48cce8b0cc54"
   },
   {
-    "url": "static/js/1.a97123e0e58e29b81507.js",
-    "revision": "569968bb90890b491cdc6f66713cff88"
+    "url": "static/js/1.88e5d1a0619aaf4e3630.js",
+    "revision": "753f0f281251cab9c563f68eb4b70491"
   },
   {
     "url": "static/js/2.e3f3a914e9a866bb6ddf.js",
@@ -100,8 +100,8 @@ workboxSW.precache([
     "revision": "d349940f796aba2475efb83af1ca3936"
   },
   {
-    "url": "static/js/manifest.404fc09c435036d49fce.js",
-    "revision": "f3fecd0e770053bbd4c917652a76d2b7"
+    "url": "static/js/manifest.39660ad36835c874e134.js",
+    "revision": "caa59bb7664094e98ed195a1a1837aaf"
   },
   {
     "url": "static/js/vendor.f9e1237bb4adaa19ce1a.js",
@@ -114,6 +114,7 @@ let timerAmount;
 
 const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
 const restartBroadcastChannel = new BroadcastChannel('timerRestart');
+const timerValueBroadcastChannel = new BroadcastChannel('timerValue');
 
 
 notificationBroadcastChannel.onmessage = ({ data }) => {
@@ -151,11 +152,26 @@ self.addEventListener('notificationclick', (event) => {
   const { notification, action } = event;
 
   if (action === 'yes') {
-    restartBroadcastChannel.postMessage('restart');
+    let promise;
+    if (timerAmount) {
+      promise = openExistingWindow(self.location, self.clients, timerAmount);
+    } else {
+      promise = new Promise((resolve) => {
+        const timerNotifications = new BroadcastChannel('timerNotification');
 
-    event.waitUntil(openExistingWindow(self.location, self.clients, timerAmount));
+        timerNotifications.onmessage = ({ data }) => {
+          resolve(data);
+        };
 
-    notification.close();
+        timerValueBroadcastChannel.postMessage();
+      });
+    }
+
+    event.waitUntil(promise.then(() => {
+      restartBroadcastChannel.postMessage('restart');
+
+      notification.close();
+    }));
   }
 });
 

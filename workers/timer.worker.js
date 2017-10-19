@@ -10,6 +10,7 @@ const doubleDigitChecker = (value) => { return value.length === 1 ? `0${value}` 
 const calculateSeconds = milliseconds => doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
 const calculateMinutes = milliseconds => doubleDigitChecker(`${milliseconds / 6000}`.split('.')[0]);
 const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
+const timerValueBroadcastChannel = new BroadcastChannel('timerValue');
 const restartBroadcastChannel = new BroadcastChannel('timerRestart');
 
 function startTimer(timerAmount, notificationAllowed) {
@@ -33,7 +34,7 @@ function startTimer(timerAmount, notificationAllowed) {
         milliseconds: doubleDigitChecker(`${timerValue % 100}`),
         seconds: calculateSeconds(timerValue),
         minutes: calculateMinutes(timerValue),
-        timerEndTime
+        timerEndTime,
       });
       clearInterval(intervalId);
     } else {
@@ -56,6 +57,9 @@ function makeRequestForPushNotification(timerAmount) {
     body: 'Timer is up!',
     icon: 'static/images/timer.png',
     vibrate: [200, 100, 200, 100, 200, 100, 400],
+    data: {
+      timerAmount,
+    },
     tag: 'request',
     actions: [
       { action: 'yes', title: 'Restart Timer', icon: 'static/images/check.png' },
@@ -75,6 +79,10 @@ function makeRequestForPushNotification(timerAmount) {
     }),
   }).catch(response => console.log(JSON.stringify(response)));
 }
+
+timerValueBroadcastChannel.onmessage = () => {
+  notificationBroadcastChannel.postMessage(timerAmount);
+};
 
 restartBroadcastChannel.onmessage = () => {
   clearInterval(intervalId);
