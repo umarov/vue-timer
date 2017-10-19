@@ -31,6 +31,15 @@ export default {
       this.timerWorker.postMessage({ checkTimerValue: true });
     });
 
+    setTimeout(() => {
+      window
+        .firebaseMessaging
+        .onMessage((event) => {
+          console.log(event);
+          this.resetTimer();
+        });
+    }, 100);
+
     this.notificationAllowed = false;
     this.timerWorker.onmessage = (event) => {
       requestAnimationFrame(() => {

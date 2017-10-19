@@ -7,9 +7,6 @@ import 'vuetify/dist/vuetify.min.css';
 import App from './App';
 import router from './router';
 
-Vue.config.productionTip = false;
-Vue.use(Vuetify);
-
 const config = {
   apiKey: 'AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw',
   authDomain: 'codeshoptimer.firebaseapp.com',
@@ -21,6 +18,19 @@ const config = {
 
 firebase.initializeApp(config);
 window.firebaseMessaging = firebase.messaging();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then((registration) => {
+    window.firebaseMessaging.useServiceWorker(registration);
+    window.swRegistration = registration;
+  }).catch((e) => {
+    console.log('Service Worker registration failed');
+    console.error(e);
+  });
+}
+
+Vue.config.productionTip = false;
+Vue.use(Vuetify);
 
 /* eslint-disable no-new */
 new Vue({

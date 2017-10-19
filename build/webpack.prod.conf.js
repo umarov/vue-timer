@@ -99,11 +99,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../manifest.json'),
         to: config.build.assetsRoot,
         ignore: ['.*']
-      },
-      {
-        from: path.resolve(__dirname, '../src/firebase-messaging-sw.js'),
-        to: config.build.assetsRoot,
-        ignore: ['.*']
       }
     ]),
     new workboxPlugin({

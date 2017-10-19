@@ -13,50 +13,42 @@ export default {
     };
   },
   mounted() {
-    window.firebaseMessaging.useServiceWorker(window.swRegistration);
-    window
-      .firebaseMessaging
-      .getToken()
-      .then((currentToken) => {
-        if (currentToken) {
-          this.sendTokenToWorker(currentToken);
-          this.notificationAllowed = this.getCachedOverride();
-        } else {
-          this.notificationAllowed = false;
-        }
-      })
-      .catch(() => {
-        this.notificationAllowed = false;
-      })
-      .then(() => {
-        this.$emit('notification-state', this.notificationAllowed);
-      });
-
-    window
-      .firebaseMessaging
-      .onTokenRefresh(() => {
-        window
-          .firebaseMessaging
-          .getToken()
-          .then((refreshedToken) => {
-            if (refreshedToken) {
-              this.sendTokenToWorker(refreshedToken);
-              this.notificationAllowed = this.getCachedOverride();
-            } else {
-              this.notificationAllowed = false;
-            }
-          })
-          .catch(() => {
-            this.notificationAllowed = false;
-          })
-          .then(() => {
-            this.$emit('notification-state', this.notificationAllowed);
-          });
-      });
+    setTimeout(() => {
+      window
+        .firebaseMessaging
+        .getToken()
+        .then(this.onTokenReceived)
+        .catch(this.notificationNotAllowed)
+        .then(this.fireEventWithNotificationState);
+      window
+        .firebaseMessaging
+        .onTokenRefresh(() => {
+          window
+            .firebaseMessaging
+            .getToken()
+            .then(this.onTokenReceived)
+            .catch(this.notificationNotAllowed)
+            .then(this.fireEventWithNotificationState);
+        });
+    }, 100);
   },
   methods: {
+    onTokenReceived(currentToken) {
+      if (currentToken) {
+        this.sendTokenToWorker(currentToken);
+        this.notificationAllowed = this.getCachedOverride();
+      } else {
+        this.notificationNotAllowed();
+      }
+    },
+    notificationNotAllowed() {
+      this.notificationAllowed = false;
+    },
     sendTokenToWorker(token) {
       this.worker.postMessage({ setNotificationToken: true, notificationToken: token });
+    },
+    fireEventWithNotificationState() {
+      this.$emit('notification-state', this.getCachedOverride());
     },
     subscribeForNotifications() {
       window
@@ -75,7 +67,7 @@ export default {
     },
     setCachedOverride(notificationOverride) {
       localStorage.setItem('notification-override', notificationOverride);
-      this.$emit('notification-state', notificationOverride);
+      this.fireEventWithNotificationState();
     },
   },
 };

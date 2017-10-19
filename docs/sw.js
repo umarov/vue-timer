@@ -2,6 +2,17 @@ importScripts('https://unpkg.com/workbox-sw@2.1.0/build/importScripts/workbox-sw
 importScripts('https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.5.0/firebase-messaging.js');
 
+const config = {
+  apiKey: 'AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw',
+  authDomain: 'codeshoptimer.firebaseapp.com',
+  databaseURL: 'https://codeshoptimer.firebaseio.com',
+  projectId: 'codeshoptimer',
+  storageBucket: 'codeshoptimer.appspot.com',
+  messagingSenderId: '222344146536',
+};
+
+firebase.initializeApp(config);
+const messaging = firebase.messaging();
 
 const workboxSW = new self.WorkboxSW();
 
@@ -61,12 +72,8 @@ workboxSW.precache([
     "revision": "df05ea0d4c2b98506167108b3cb45c35"
   },
   {
-    "url": "firebase-messaging-sw.js",
-    "revision": "b7ba659795537e1bfbca0ea369e8a7e5"
-  },
-  {
     "url": "index.html",
-    "revision": "5db1d9500088689956356f2c12c5105e"
+    "revision": "719373fa2338840a1d5a92e457c0e98c"
   },
   {
     "url": "static/css/app.4cbd75d60eb50db74b37959b15142bf1.css",
@@ -77,27 +84,97 @@ workboxSW.precache([
     "revision": "1a817ae67c845d2a8f4e48cce8b0cc54"
   },
   {
-    "url": "static/js/1.3985d4fa952ab5e2bd66.js",
-    "revision": "d9fe034edf0e734affcb81c5b9096d6e"
+    "url": "static/js/1.5aa49c6f37abef83a8b6.js",
+    "revision": "f1014a7b3b193f7ab748ff3405130a5b"
   },
   {
     "url": "static/js/2.e3f3a914e9a866bb6ddf.js",
     "revision": "cd3777fa42166556e0c20a518e9cc5fc"
   },
   {
-    "url": "static/js/5.7a5380eb3c28f06db488.js",
-    "revision": "c57e879d4d355e600d5b4b6d8c378b57"
+    "url": "static/js/5.b2a67e5271793cfa9ba4.js",
+    "revision": "316f207f993a32284bbb1be48278cf2a"
   },
   {
-    "url": "static/js/app.b3f1be2423ddb2445154.js",
-    "revision": "79f35487e686ffd7c045ab59b1cf7a09"
+    "url": "static/js/app.f20b1c63a35929f23539.js",
+    "revision": "fc7fad9ab0c251dc7692a14b162a19b1"
   },
   {
-    "url": "static/js/manifest.fecd55e8bb07a792a732.js",
-    "revision": "5fe11c8cbdaf910a0c74c3e07bc0b63a"
+    "url": "static/js/manifest.25549ca10ba51d95ffec.js",
+    "revision": "db51b72350f354f20bfa17215480384c"
   },
   {
     "url": "static/js/vendor.f9e1237bb4adaa19ce1a.js",
     "revision": "ce0889ad2daf11611b2b7a06443918c0"
   }
 ]);
+
+
+let timerAmount;
+
+const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
+const restartBroadcastChannel = new BroadcastChannel('timerRestart');
+
+
+notificationBroadcastChannel.onmessage = ({ data }) => {
+  timerAmount = data;
+}
+
+const openExistingWindow = (location, clients, timerAmount) => {
+  const urlToOpen = new URL(`code-shop-timer/#/display/${timerAmount}`, location.origin).href;
+
+  return clients
+    .matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    })
+    .then((windowClients) => {
+      let matchingClient = null;
+
+      for (let i = 0; i < windowClients.length; i++) {
+        const windowClient = windowClients[i];
+        if (windowClient.url === urlToOpen) {
+          matchingClient = windowClient;
+          break;
+        }
+      }
+
+      if (matchingClient) {
+        return matchingClient.focus();
+      }
+
+      return clients.openWindow(urlToOpen);
+    });
+};
+
+self.addEventListener('notificationclick', (event) => {
+  const { notification, action } = event;
+
+  if (action === 'yes') {
+    restartBroadcastChannel.postMessage('restart');
+
+    event.waitUntil(openExistingWindow(self.location, self.clients, timerAmount));
+
+    notification.close();
+  }
+});
+
+
+const prepareAndSendNotification = () => {
+  const notificationPayload = {
+    body: 'Timer is up!',
+    icon: 'static/images/timer.png',
+    vibrate: [200, 100, 200, 100, 200, 100, 400],
+    tag: 'request',
+    actions: [
+      { action: 'yes', title: 'Restart Timer', icon: 'static/images/check.png' },
+    ],
+  };
+
+  return self.registration.showNotification('Timer is up!', notificationPayload);
+};
+
+
+self.addEventListener('push', (event) => {
+  event.waitUntil(prepareAndSendNotification());
+});
