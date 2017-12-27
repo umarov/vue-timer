@@ -16,7 +16,6 @@ const cors = require('cors')({
 //
 export const sendNotification = functions.https.onRequest(async (request, response) => {
   cors(request, response, async () => {
-    console.log(request.body)
     const { timerAmount, notificationToken } = request.body;
     try {
       await makeNotificationRequest(timerAmount, notificationToken);
@@ -38,12 +37,12 @@ function makeNotificationRequest(timerAmount, notificationToken) {
     },
     tag: 'request',
     actions: [{ action: 'yes', title: 'Restart Timer', icon: 'static/images/check.png' }],
-    token: notificationToken,
     priority: 'high',
   };
 
   return axios.post('https://fcm.googleapis.com/fcm/send', {
-    notification: notificationPayload,
+    to: notificationToken,
+    message: notificationPayload,
   }, {
     headers: {
       'Content-Type': 'application/json',
