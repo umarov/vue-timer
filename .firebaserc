@@ -1,5 +1,6 @@
 {
   "projects": {
-    "prod": "codeshoptimer"
+    "prod": "codeshoptimer",
+    "default": "codeshoptimer"
   }
 }

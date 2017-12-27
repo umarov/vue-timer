@@ -8,11 +8,9 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <main class="app-content">
-      <v-content fluid class="pa-2">
-        <router-view></router-view>
-      </v-content>
-    </main>
+    <v-content fluid class="pa-2">
+      <router-view></router-view>
+    </v-content>
 
     <v-tabs v-show="showBottomBar" class="bottom-tabs" v-model="activeTab" light fixed icons centered>
       <v-tabs-bar class="green">
@@ -63,6 +61,8 @@ export default {
 body {
   overflow-x: hidden;
   overflow-y: hidden;
+  font-family: 'Roboto', monospace;
+  color: #2c3e50;
 }
 
 v-tabs-item {
@@ -72,11 +72,6 @@ v-tabs-item {
 .bottom-tabs {
   position: fixed;
   bottom: 0;
-}
-
-.app-content {
-  font-family: 'Roboto', monospace;
-  color: #2c3e50;
 }
 
 .animated {

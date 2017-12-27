@@ -23,22 +23,18 @@ export default {
   },
   methods: {
     setupTokens() {
-      window
-        .firebaseMessaging
+      window.firebaseMessaging
         .getToken()
         .then(this.onTokenReceived)
         .catch(this.notificationNotAllowed)
         .then(this.fireEventWithNotificationState);
-      window
-        .firebaseMessaging
-        .onTokenRefresh(() => {
-          window
-            .firebaseMessaging
-            .getToken()
-            .then(this.onTokenReceived)
-            .catch(this.notificationNotAllowed)
-            .then(this.fireEventWithNotificationState);
-        });
+      window.firebaseMessaging.onTokenRefresh(() => {
+        window.firebaseMessaging
+          .getToken()
+          .then(this.onTokenReceived)
+          .catch(this.notificationNotAllowed)
+          .then(this.fireEventWithNotificationState);
+      });
     },
     onTokenReceived(currentToken) {
       if (currentToken) {
@@ -61,8 +57,7 @@ export default {
       this.$emit('notification-state', this.getCachedOverride());
     },
     subscribeForNotifications() {
-      window
-        .firebaseMessaging
+      window.firebaseMessaging
         .requestPermission()
         .then(() => {
           this.notificationAllowed = !this.notificationAllowed;

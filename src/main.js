@@ -20,14 +20,17 @@ firebase.initializeApp(config);
 window.firebaseMessaging = firebase.messaging();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then((registration) => {
-    window.firebaseMessaging.useServiceWorker(registration);
-    window.swRegistration = registration;
-    dispatchEvent(new CustomEvent('serviceWorkerRegistered'));
-  }).catch((e) => {
-    console.log('Service Worker registration failed');
-    console.error(e);
-  });
+  navigator.serviceWorker
+    .register('./sw.js')
+    .then((registration) => {
+      window.firebaseMessaging.useServiceWorker(registration);
+      window.swRegistration = registration;
+      dispatchEvent(new CustomEvent('serviceWorkerRegistered'));
+    })
+    .catch((e) => {
+      console.log('Service Worker registration failed');
+      console.error(e);
+    });
 }
 
 Vue.config.productionTip = false;

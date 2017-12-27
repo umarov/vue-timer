@@ -1,10 +1,14 @@
 import timerIcon from '../src/assets/img/favicon.ico';
 
+const localUrl = 'http://localhost:5000/codeshoptimer/us-central1/sendNotification';
+const prodUrl = 'https://us-central1-codeshoptimer.cloudfunctions.net/sendNotification';
+const worker = self;
 let intervalId = 0;
 let timerValue = 0;
 let timerEndTime = 0;
 let notification;
 let notificationToken;
+
 
 const doubleDigitChecker = (value) => { return value.length === 1 ? `0${value}` : value; };
 const calculateSeconds = milliseconds => doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
@@ -53,35 +57,21 @@ function startTimer(timerAmount, notificationAllowed) {
 function makeRequestForPushNotification(timerAmount) {
   notificationBroadcastChannel.postMessage(timerAmount);
   const myHeaders = new Headers();
-  const notificationPayload = {
-    body: 'Timer is up!',
-    icon: 'static/images/timer.png',
-    vibrate: [200, 100, 200, 100, 200, 100, 400],
-    data: {
-      timerAmount,
-    },
-    tag: 'request',
-    actions: [
-      { action: 'yes', title: 'Restart Timer', icon: 'static/images/check.png' },
-    ],
-  };
 
   myHeaders.append('Content-Type', 'application/json');
-  myHeaders.append('Authorization', 'key=AAAAM8S-bmg:APA91bF70jClkUJI-UtUuLbr1rgw1WkldiDCtiSrYuVryofUyDsu6Kz3LhwEuyaF1PWQHb0UZceAvRfFEu2ZE64IFH6VMyUD4ecR0kr8qgO1FLRexnZA1phqXk-duYQRmqazJotAMvV3');
-  fetch('https://fcm.googleapis.com/fcm/send', {
+
+  fetch(prodUrl, {
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify({
-      data: {
-        'json-data': JSON.stringify(notificationPayload),
-      },
-      to: notificationToken,
-    }),
+      timerAmount,
+      notificationToken,
+    })
   }).catch(response => console.log(JSON.stringify(response)));
 }
 
 timerValueBroadcastChannel.onmessage = () => {
-  notificationBroadcastChannel.postMessage(timerAmount);
+  notificationBroadcastChannel.postMessage(timerValue);
 };
 
 restartBroadcastChannel.onmessage = () => {
@@ -125,7 +115,7 @@ self.onmessage = (event) => {
       milliseconds: doubleDigitChecker(`${timerValue % 100}`),
       seconds: calculateSeconds(timerValue),
       minutes: calculateMinutes(timerValue),
-      timerEndTime
+      timerEndTime,
     });
   } else {
     clearInterval(intervalId);
