@@ -42,36 +42,38 @@ export default {
 
     this.notificationAllowed = false;
     this.timerWorker.onmessage = (event) => {
-      requestAnimationFrame(() => {
-        const {
-          timerValue,
-          milliseconds,
-          seconds,
-          minutes,
-          timerEndTime,
-        } = event.data;
+      if (!document.hidden) {
+        requestAnimationFrame(() => {
+          const {
+            timerValue,
+            milliseconds,
+            seconds,
+            minutes,
+            timerEndTime,
+          } = event.data;
 
-        if (timerValue === 0) {
-          const timeDiff = (Date.now() - timerEndTime) / 10;
-          if (this.notificationAllowed && timeDiff < 10) {
-            audio.play();
+          if (timerValue === 0) {
+            const timeDiff = (Date.now() - timerEndTime) / 10;
+            if (this.notificationAllowed && timeDiff < 10) {
+              audio.play();
+            }
+
+            this.resetTimer();
+          } else {
+            this.timerValue = timerValue;
+            this.progressAmount = this.timerValue;
+
+            this.milliseconds = milliseconds;
+            if (this.seconds !== seconds) {
+              this.seconds = seconds;
+            }
+
+            if (this.minutes !== minutes) {
+              this.minutes = minutes;
+            }
           }
-
-          this.resetTimer();
-        } else {
-          this.timerValue = timerValue;
-          this.progressAmount = this.timerValue;
-
-          this.milliseconds = milliseconds;
-          if (this.seconds !== seconds) {
-            this.seconds = seconds;
-          }
-
-          if (this.minutes !== minutes) {
-            this.minutes = minutes;
-          }
-        }
-      });
+        });
+      }
     };
 
     const matchUpdater = size => (mediaQueryList) => {
