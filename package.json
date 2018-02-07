@@ -4,6 +4,9 @@
   "description": "Timer app for Code Shops",
   "author": "Muzafar Umarov <umarov@gmail.com>",
   "private": true,
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/umarov"
+  },
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
@@ -88,7 +91,7 @@
     "webpack-dev-middleware": "^2.0.3",
     "webpack-hot-middleware": "^2.21.0",
     "webpack-merge": "^4.1.1",
-    "workbox-webpack-plugin": "^2.1.2",
+    "workbox-webpack-plugin": "^3.0.0-alpha.3",
     "worker-loader": "^1.1.0",
     "yargs": "^10.0.3"
   },

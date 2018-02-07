@@ -102,7 +102,7 @@ function startTimer(timerAmount, notificationAllowed) {
       timerValue = 0;
       timerEndTime = Date.now();
 
-      if (Notification.permission === 'granted' && notificationAllowed) {
+      if (Notification.permission === 'granted' && notificationAllowed && notificationToken) {
         makeRequestForPushNotification(timerAmount);
       }
 
@@ -204,4 +204,4 @@ module.exports = "data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgA
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=fdf50702baa329c27c9c.worker.js.map
+//# sourceMappingURL=0c1a9baf964df56604c7.worker.js.map

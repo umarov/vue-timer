@@ -8,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const workboxPlugin     = require('workbox-webpack-plugin');
+const WorkboxPlugin     = require('workbox-webpack-plugin');
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -101,12 +101,16 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
-    new workboxPlugin({
+    new WorkboxPlugin({
       globDirectory: config.build.assetsRoot,
       globPatterns: ['**/*.{html,js,css}'],
-      swSrc: './src/service-worker.js',
+      importScripts: [
+        'https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js',
+        'https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js',
+      ],
+      swSrc: './src/sw.js',
       swDest: path.join(config.build.assetsRoot, 'sw.js'),
-    })
+    }),
   ]
 })
 

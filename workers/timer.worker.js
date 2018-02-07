@@ -29,7 +29,7 @@ function startTimer(timerAmount, notificationAllowed) {
       timerValue = 0;
       timerEndTime = Date.now();
 
-      if (Notification.permission === 'granted' && notificationAllowed) {
+      if (Notification.permission === 'granted' && notificationAllowed && notificationToken) {
         makeRequestForPushNotification(timerAmount);
       }
 

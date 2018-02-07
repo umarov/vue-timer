@@ -9,6 +9,7 @@ export default {
     return {
       notificationPermission: Notification.permission,
       notificationAllowed: null,
+      token: null,
       worker: this.timerWorker,
     };
   },
@@ -38,6 +39,7 @@ export default {
     },
     onTokenReceived(currentToken) {
       if (currentToken) {
+        this.token = currentToken;
         this.sendTokenToWorker(currentToken);
         this.notificationAllowed = this.getCachedOverride();
       } else {

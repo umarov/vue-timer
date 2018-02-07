@@ -1,6 +1,6 @@
-importScripts('https://unpkg.com/workbox-sw@2.1.2/build/importScripts/workbox-sw.prod.v2.1.2.js');
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
+workbox.loadModule('workbox-routing');
+workbox.loadModule('workbox-strategies');
+workbox.loadModule('workbox-precaching');
 
 const config = {
   apiKey: 'AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw',
@@ -14,11 +14,9 @@ const config = {
 firebase.initializeApp(config);
 const messaging = firebase.messaging();
 
-const workboxSW = new self.WorkboxSW();
-
-workboxSW.router.registerRoute(
+workbox.routing.registerRoute(
   'https://fonts.googleapis.com/(.*)',
-  workboxSW.strategies.cacheFirst({
+  workbox.strategies.cacheFirst({
     cacheName: 'googleapis',
     cacheableResponse: {
       statuses: [0, 200],
@@ -27,9 +25,9 @@ workboxSW.router.registerRoute(
   }),
 );
 
-workboxSW.router.registerRoute(
-  'https://www.gstatic.com/firebasejs/4.5.0/(.*)',
-  workboxSW.strategies.cacheFirst({
+workbox.routing.registerRoute(
+  'https://www.gstatic.com/firebasejs/4.8.1/(.*)',
+  workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
       statuses: [0, 200],
@@ -38,9 +36,9 @@ workboxSW.router.registerRoute(
   }),
 );
 
-workboxSW.router.registerRoute(
+workbox.routing.registerRoute(
   'https://unpkg.com/workbox-sw@2.1.2/build/importScripts/(.*)',
-  workboxSW.strategies.cacheFirst({
+  workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
       statuses: [0, 200],
@@ -49,9 +47,9 @@ workboxSW.router.registerRoute(
   }),
 );
 
-workboxSW.router.registerRoute(
+workbox.routing.registerRoute(
   'https://fonts.gstatic.com/(.*)',
-  workboxSW.strategies.cacheFirst({
+  workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
       statuses: [0, 200],
@@ -60,9 +58,9 @@ workboxSW.router.registerRoute(
   }),
 );
 
-workboxSW.router.registerRoute(
+workbox.routing.registerRoute(
   'https://cdnjs.cloudflare.com/ajax/libs/animate.css(.*)',
-  workboxSW.strategies.cacheFirst({
+  workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
       statuses: [0, 200],
@@ -70,8 +68,6 @@ workboxSW.router.registerRoute(
     networkTimeoutSeconds: 4,
   }),
 );
-
-workboxSW.precache([]);
 
 let timerAmount;
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-layout row center justify-space-around class="text-xs-center">
+    <v-layout v-if="token" row center justify-space-around class="text-xs-center">
       <v-flex>
         <v-btn outline
                 flat
