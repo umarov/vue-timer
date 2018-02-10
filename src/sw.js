@@ -26,7 +26,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  'https://www.gstatic.com/firebasejs/4.8.1/(.*)',
+  'https://www.gstatic.com/firebasejs/4.9.1/(.*)',
   workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
@@ -37,7 +37,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  'https://unpkg.com/workbox-sw@2.1.2/build/importScripts/(.*)',
+  'https://unpkg.com/workbox-sw@3.0.0-beta.0/build/importScripts/(.*)',
   workbox.strategies.cacheFirst({
     cacheName: 'gstatic',
     cacheableResponse: {
