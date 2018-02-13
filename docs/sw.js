@@ -1,4 +1,4 @@
-importScripts("precache-manifest.74d01ca4e602b1cdd9c238904f15ae39.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.0-beta.0/workbox-sw.js");
+importScripts("https://www.gstatic.com/firebasejs/4.9.1/firebase-app.js", "https://www.gstatic.com/firebasejs/4.9.1/firebase-messaging.js", "precache-manifest.5670603aeea4b87b1a4e3411471a4985.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.0-beta.0/workbox-sw.js");
 
 workbox.loadModule('workbox-routing');
 workbox.loadModule('workbox-strategies');

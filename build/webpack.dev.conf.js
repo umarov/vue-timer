@@ -8,11 +8,11 @@ const baseWebpackConfig = require('./webpack.base.conf');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
 
 // add hot-reload related code to entry chunks
 if (!argv.watch) {
-  Object.keys(baseWebpackConfig.entry).forEach((name) => {
+  Object.keys(baseWebpackConfig.entry).forEach(name => {
     baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
   });
 }
@@ -67,12 +67,12 @@ module.exports = merge(baseWebpackConfig, {
         ignore: ['.*'],
       },
     ]),
-    new WorkboxPlugin({
+    new InjectManifest({
       globDirectory: config.build.assetsRoot,
       globPatterns: ['**/*.{html,js,css}'],
       importScripts: [
-        'https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js',
-        'https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js',
+        'https://www.gstatic.com/firebasejs/4.9.1/firebase-app.js',
+        'https://www.gstatic.com/firebasejs/4.9.1/firebase-messaging.js',
       ],
       swSrc: './src/sw.js',
       swDest: path.join(config.build.assetsRoot, 'sw.js'),

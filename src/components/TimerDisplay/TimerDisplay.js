@@ -10,46 +10,35 @@ export default {
   components: {
     'timer-notification': () => import('./TimerNotification/TimerNotification.vue'),
   },
-  props: [
-    'timerAmount',
-  ],
+  props: ['timerAmount'],
   data() {
     return {
       progressSize: '100',
-      progressAmount: 0,
       timerValue: 0,
-      milliseconds: '00',
-      seconds: '00',
-      minutes: '00',
+      percentageForDisplay: 0,
+      fullTimerDisplay: '00:00:00',
       timerEndTime: 0,
-      paused: false,
-      intervalObject: {},
+      timerActive: false,
       timerWorker: new TimerWorker(),
     };
   },
-  mounted() {
+  created() {
     document.addEventListener('visibilitychange', () => {
       this.timerWorker.postMessage({ checkTimerValue: true });
     });
 
     setTimeout(() => {
-      window
-        .firebaseMessaging
-        .onMessage(() => {
-          this.resetTimer();
-        });
+      window.firebaseMessaging.onMessage(() => {
+        this.resetTimer();
+      });
     }, 100);
 
     this.notificationAllowed = false;
     this.timerWorker.onmessage = (event) => {
       if (!document.hidden) {
-        requestAnimationFrame(() => {
+        this.$nextTick(() => {
           const {
-            timerValue,
-            milliseconds,
-            seconds,
-            minutes,
-            timerEndTime,
+            timerValue, timerEndTime, percentageForDisplay, fullTimerDisplay,
           } = event.data;
 
           if (timerValue === 0) {
@@ -60,24 +49,20 @@ export default {
 
             this.resetTimer();
           } else {
-            this.timerValue = timerValue;
-            this.progressAmount = this.timerValue;
-
-            this.milliseconds = milliseconds;
-            if (this.seconds !== seconds) {
-              this.seconds = seconds;
-            }
-
-            if (this.minutes !== minutes) {
-              this.minutes = minutes;
-            }
+            requestAnimationFrame(() => {
+              this.percentageForDisplay = percentageForDisplay;
+              this.timerValue = timerValue;
+              this.fullTimerDisplay = fullTimerDisplay;
+            });
           }
         });
       }
     };
 
     const matchUpdater = size => (mediaQueryList) => {
-      if (mediaQueryList.matches) { this.progressSize = size; }
+      if (mediaQueryList.matches) {
+        this.progressSize = size;
+      }
     };
 
     const mediaQueryLists = [
@@ -94,9 +79,20 @@ export default {
     mediaQueryLists.map(mqlObj => mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)));
     mediaQueryLists.map(mqlObj => matchUpdater.bind(this)(mqlObj.size)(mqlObj.query));
 
-    this.timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
-    this.paused = false;
-    document.querySelector('.progress-circular__overlay').style.transition = 'none';
+    this.timerWorker.postMessage({
+      resetTimer: true,
+      timerAmount: this.timerAmount,
+      fullAmount: this.timerAmount,
+    });
+    this.timerActive = false;
+
+    setTimeout(() => {
+      const circularOverlay = document.querySelector('.progress-circular__overlay');
+      if (circularOverlay) {
+        circularOverlay.style.transition = 'none';
+        circularOverlay.style.color = '#4caf50';
+      }
+    }, 500);
   },
   destroyed() {
     this.resetTimer();
@@ -104,30 +100,43 @@ export default {
   },
   methods: {
     startTimer() {
-      audio.pause();
-      audio.currentTime = 0;
-      this.paused = false;
+      this.timerActive = true;
+      if (this.timerValue === this.timerAmount) {
+        audio.pause();
+        audio.currentTime = 0;
+
+        this.timerWorker.postMessage({
+          startTimer: true,
+          timerAmount: this.timerAmount,
+          fullAmount: this.timerAmount,
+          notificationAllowed: this.notificationAllowed,
+        });
+      } else {
+        this.resumeTimer();
+      }
+    },
+    resumeTimer() {
+      this.timerActive = true;
 
       this.timerWorker.postMessage({
         startTimer: true,
-        timerAmount: this.timerAmount,
-        notificationAllowed: this.notificationAllowed,
+        timerAmount: this.timerValue,
+        fullAmount: this.timerAmount,
       });
     },
-    resumeTimer() {
-      this.paused = false;
-
-      this.timerWorker.postMessage({ startTimer: true, timerAmount: this.timerValue });
-    },
     pauseTimer() {
-      this.paused = true;
+      this.timerActive = false;
 
       this.timerWorker.postMessage({ startTimer: false });
     },
     resetTimer() {
-      this.paused = false;
+      this.timerActive = false;
 
-      this.timerWorker.postMessage({ resetTimer: true, timerAmount: this.timerAmount });
+      this.timerWorker.postMessage({
+        resetTimer: true,
+        timerAmount: this.timerAmount,
+        fullAmount: this.timerAmount,
+      });
     },
     allowNotification(notificationValue) {
       this.notificationAllowed = notificationValue;

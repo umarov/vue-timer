@@ -1,56 +1,27 @@
 <template>
   <div id="timer" class="animated slideInUp">
-    <timer-notification v-bind:timer-worker="timerWorker" v-on:notification-state="allowNotification"></timer-notification>
+    <timer-notification :timer-worker="timerWorker" @notification-state="allowNotification"></timer-notification>
     <div class="timer">
       <div class="timer-content__values green--text">
-        {{ minutes }}:{{ seconds }}:{{ milliseconds }}
+        {{ fullTimerDisplay }}
       </div>
       <div class="timer-content">
-        <v-progress-circular
-          v-bind:size="300"
-          v-bind:width="5"
-          v-bind:rotate="-90"
-          color="green"
-          v-bind:class="{ pulse: paused }"
-          v-bind:value="(progressAmount / timerAmount) * 100"
-          class="primary--text timer-content__circular-progress animated infinite">
-        </v-progress-circular>
+        <!-- <v-progress-circular :size="300" :width="5" :rotate="-90" color="green" :class="{ pulse: paused }" :value="percentageForDisplay" class="primary--text timer-content__circular-progress animated infinite">
+        </v-progress-circular> -->
+        <svg xmlns="http://www.w3.org/2000/svg" height="300" width="300" style="transform: rotate(-90deg);">
+          <circle fill="transparent" cx="150" cy="150" r="147.5" stroke-width="5" stroke-dasharray="926.77" stroke-dashoffset="0" class="progress-circular__underlay"></circle>
+          <circle fill="transparent" cx="150" cy="150" r="147.5" stroke-width="5" stroke-dasharray="926.77" :stroke-dashoffset="926.77 - (926.77 * percentageForDisplay/100)" class="progress-circular__overlay" style="transition: none;"></circle>
+        </svg>
       </div>
       <div class="timer-buttons">
-        <v-btn light
-                fab
-                outline
-                color="blue"
-                class="btn--light-flat-focused white--text timer-button"
-                v-on:click.native="resetTimer()">
+        <v-btn light fab outline color="blue" class="btn--light-flat-focused white--text timer-button" @click.native="resetTimer()">
           <v-icon>loop</v-icon>
         </v-btn>
-        <v-btn light
-                fab
-                outline
-                color="green"
-                v-if="timerValue === timerAmount"
-                class="btn--light-flat-focused white--text timer-button"
-                v-on:click.native="startTimer()">
-          <v-icon>play_circle_outline</v-icon>
-        </v-btn>
-        <v-btn light
-                fab
-                outline
-                color="green"
-                v-else-if="paused"
-                class="btn--light-flat-focused white--text timer-button"
-                v-on:click.native="resumeTimer()">
-          <v-icon>play_circle_filled</v-icon>
-        </v-btn>
-        <v-btn light
-                fab
-                outline
-                color="red"
-                v-else
-                class="btn--light-flat-focused white--text timer-button"
-                v-on:click.native="pauseTimer()">
+        <v-btn light fab outline color="red" v-if="timerActive" class="btn--light-flat-focused white--text timer-button" @click.native="pauseTimer()">
           <v-icon>pause_circle_outline</v-icon>
+        </v-btn>
+        <v-btn light fab outline color="green" v-else class="btn--light-flat-focused white--text timer-button" @click.native="startTimer()">
+          <v-icon>play_circle_outline</v-icon>
         </v-btn>
       </div>
     </div>

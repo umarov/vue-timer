@@ -82,15 +82,15 @@ let timerEndTime = 0;
 let notification;
 let notificationToken;
 
-
-const doubleDigitChecker = (value) => { return value.length === 1 ? `0${value}` : value; };
-const calculateSeconds = milliseconds => doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
+const doubleDigitChecker = value => (value.length === 1 ? `0${value}` : value);
+const calculateSeconds = milliseconds =>
+  doubleDigitChecker(`${(milliseconds / 100) % 60}`.split('.')[0]);
 const calculateMinutes = milliseconds => doubleDigitChecker(`${milliseconds / 6000}`.split('.')[0]);
 const notificationBroadcastChannel = new BroadcastChannel('timerNotification');
 const timerValueBroadcastChannel = new BroadcastChannel('timerValue');
 const restartBroadcastChannel = new BroadcastChannel('timerRestart');
 
-function startTimer(timerAmount, notificationAllowed) {
+function startTimer(timerAmount, notificationAllowed, fullAmount) {
   timerValue = timerAmount;
 
   if (notification) {
@@ -108,9 +108,8 @@ function startTimer(timerAmount, notificationAllowed) {
 
       postMessage({
         timerValue,
-        milliseconds: doubleDigitChecker(`${timerValue % 100}`),
-        seconds: calculateSeconds(timerValue),
-        minutes: calculateMinutes(timerValue),
+        percentageForDisplay: timerValue / fullAmount * 100,
+        fullTimerDisplay: makeFullTimerDisplay(timerValue),
         timerEndTime,
       });
       clearInterval(intervalId);
@@ -119,9 +118,8 @@ function startTimer(timerAmount, notificationAllowed) {
 
       postMessage({
         timerValue,
-        milliseconds: doubleDigitChecker(`${timerValue % 100}`),
-        seconds: calculateSeconds(timerValue),
-        minutes: calculateMinutes(timerValue),
+        percentageForDisplay: timerValue / fullAmount * 100,
+        fullTimerDisplay: makeFullTimerDisplay(timerValue),
       });
     }
   }, 10);
@@ -139,7 +137,7 @@ function makeRequestForPushNotification(timerAmount) {
     body: JSON.stringify({
       timerAmount,
       notificationToken,
-    })
+    }),
   }).catch(response => console.log(JSON.stringify(response)));
 }
 
@@ -150,14 +148,14 @@ timerValueBroadcastChannel.onmessage = () => {
 restartBroadcastChannel.onmessage = () => {
   clearInterval(intervalId);
 
-  intervalId = startTimer(timerValue, true);
-}
+  intervalId = startTimer(timerValue, true, timerValue);
+};
 
 self.addEventListener('timerstart', (event) => {
-  const { timerAmount, notificationAllowed } = event.detail;
+  const { timerAmount, notificationAllowed, fullAmount } = event.detail;
   clearInterval(intervalId);
 
-  intervalId = startTimer(timerAmount, notificationAllowed);
+  intervalId = startTimer(timerAmount, notificationAllowed, fullAmount);
 });
 
 self.onmessage = (event) => {
@@ -167,6 +165,7 @@ self.onmessage = (event) => {
     dispatchEvent(new CustomEvent('timerstart', {
       detail: {
         timerAmount: event.data.timerAmount,
+        fullAmount: event.data.fullAmount,
         notificationAllowed: event.data.notificationAllowed,
       },
     }));
@@ -175,9 +174,8 @@ self.onmessage = (event) => {
 
     postMessage({
       timerValue,
-      milliseconds: doubleDigitChecker(`${timerValue % 100}`),
-      seconds: calculateSeconds(timerValue),
-      minutes: calculateMinutes(timerValue),
+      fullTimerDisplay: makeFullTimerDisplay(timerValue),
+      percentageForDisplay: 100,
     });
     clearInterval(intervalId);
   } else if (data.setNotificationToken) {
@@ -185,15 +183,18 @@ self.onmessage = (event) => {
   } else if (data.checkTimerValue) {
     postMessage({
       timerValue,
-      milliseconds: doubleDigitChecker(`${timerValue % 100}`),
-      seconds: calculateSeconds(timerValue),
-      minutes: calculateMinutes(timerValue),
+      fullTimerDisplay: makeFullTimerDisplay(timerValue),
       timerEndTime,
+      percentageForDisplay: timerValue / event.data.timerAmount * 100,
     });
   } else {
     clearInterval(intervalId);
   }
 };
+
+function makeFullTimerDisplay(timerValue) {
+  return `${calculateMinutes(timerValue)}:${calculateSeconds(timerValue)}:${doubleDigitChecker(`${timerValue % 100}`)}`;
+}
 
 
 /***/ }),
@@ -204,4 +205,4 @@ module.exports = "data:image/x-icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgA
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=0c1a9baf964df56604c7.worker.js.map
+//# sourceMappingURL=6a9fa222e765a5b93d17.worker.js.map
