@@ -8,7 +8,7 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/worker/timer.worker.js"
   },
   {
-    "revision": "b907c1825ef2af65a9751e7b64642818",
+    "revision": "d2425592c8e634f07df9936007547c4d",
     "url": "https://umarov.github.io/code-shop-timer/index.html"
   },
   {
@@ -16,12 +16,12 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/js/2.40934112.js"
   },
   {
-    "revision": "3154a08128054858bbda",
-    "url": "https://umarov.github.io/code-shop-timer/js/app.3154a081.js"
+    "revision": "2ff1718cc52d7b051e28",
+    "url": "https://umarov.github.io/code-shop-timer/js/app.2ff1718c.js"
   },
   {
-    "revision": "0412d4dcb822694d6bcf",
-    "url": "https://umarov.github.io/code-shop-timer/js/vendor.0412d4dc.js"
+    "revision": "ce9590a99079067bf9d4",
+    "url": "https://umarov.github.io/code-shop-timer/js/vendor.ce9590a9.js"
   },
   {
     "revision": "158f4abfb6241f1e9221",
@@ -48,7 +48,7 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/img/check.png"
   },
   {
-    "revision": "3154a08128054858bbda",
+    "revision": "2ff1718cc52d7b051e28",
     "url": "https://umarov.github.io/code-shop-timer/css/app.2d1dbf26.css"
   },
   {

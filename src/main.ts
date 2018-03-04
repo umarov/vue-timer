@@ -21,21 +21,22 @@ firebase.initializeApp(config);
 window.firebaseMessaging = messaging();
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const registration = await navigator.serviceWorker.register("./sw.js", {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./sw.js", {
         scope: "./"
+      })
+      .then(registration => {
+        // @ts-ignore
+        window.firebaseMessaging.useServiceWorker(registration);
+        // @ts-ignore
+        window.swRegistration = registration;
+        dispatchEvent(new CustomEvent("serviceWorkerRegistered"));
+      })
+      .catch(err => {
+        console.log("Service Worker registration failed");
+        console.error(err);
       });
-
-      // @ts-ignore
-      window.firebaseMessaging.useServiceWorker(registration);
-      // @ts-ignore
-      window.swRegistration = registration;
-      dispatchEvent(new CustomEvent("serviceWorkerRegistered"));
-    } catch (err) {
-      console.log("Service Worker registration failed");
-      console.error(err);
-    }
   });
 }
 
