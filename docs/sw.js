@@ -1,4 +1,4 @@
-importScripts("https://umarov.github.io/code-shop-timerprecache-manifest.5318dd5f54726bf1fa5dca87887fd423.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.0-beta.1/workbox-sw.js");
+importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.bc6b988ccae34d9ad4e6215d660f79df.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.0-beta.1/workbox-sw.js");
 
 importScripts(
   "https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js",

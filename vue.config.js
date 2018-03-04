@@ -10,7 +10,7 @@ module.exports = {
     if (process.env.NODE_ENV === "production") {
       return {
         output: {
-          publicPath: "https://umarov.github.io/code-shop-timer"
+          publicPath: "https://umarov.github.io/code-shop-timer/"
         }
       };
     } else {
