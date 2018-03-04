@@ -1,19 +1,19 @@
 self.__precacheManifest = [
   {
-    "revision": "158f4abfb6241f1e9221",
-    "url": "https://umarov.github.io/code-shop-timer/js/5.158f4abf.js"
+    "revision": "f2f79bef057386ba9671",
+    "url": "https://umarov.github.io/code-shop-timer/js/manifest.f2f79bef.js"
   },
   {
     "revision": "1d90526978f8d9bcd1814a07ae995c3e",
     "url": "https://umarov.github.io/code-shop-timer/worker/timer.worker.js"
   },
   {
-    "revision": "e590860071e54b35f7d6",
-    "url": "https://umarov.github.io/code-shop-timer/js/manifest.e5908600.js"
+    "revision": "400fb0429640954c858a133db0df4417",
+    "url": "https://umarov.github.io/code-shop-timer/index.html"
   },
   {
-    "revision": "a4aaba944ba441bc0579",
-    "url": "https://umarov.github.io/code-shop-timer/js/2.a4aaba94.js"
+    "revision": "6516c50ae787c03446f7",
+    "url": "https://umarov.github.io/code-shop-timer/js/2.6516c50a.js"
   },
   {
     "revision": "c016367bed490f8aced3",
@@ -24,16 +24,16 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/js/vendor.06d73ae9.js"
   },
   {
+    "revision": "158f4abfb6241f1e9221",
+    "url": "https://umarov.github.io/code-shop-timer/js/5.158f4abf.js"
+  },
+  {
     "revision": "7f5a864e1b407371dce8",
     "url": "https://umarov.github.io/code-shop-timer/js/1.7f5a864e.js"
   },
   {
     "revision": "c22ea42246ba33217806",
     "url": "https://umarov.github.io/code-shop-timer/js/0.c22ea422.js"
-  },
-  {
-    "revision": "6aea0274836ead1ed6cab3d471b63c0b",
-    "url": "https://umarov.github.io/code-shop-timer/index.html"
   },
   {
     "revision": "59d095f397c7a5b9f387fd072fdeee41",
@@ -49,6 +49,10 @@ self.__precacheManifest = [
   },
   {
     "revision": "c016367bed490f8aced3",
-    "url": "https://umarov.github.io/code-shop-timer/css/app.2756454e.css"
+    "url": "https://umarov.github.io/code-shop-timer/css/app.2d1dbf26.css"
+  },
+  {
+    "revision": "9b3455c35ff1ac5fb0ac649b1afb224d",
+    "url": "https://umarov.github.io/code-shop-timer/audio/foghorn-daniel_simon.mp3"
   }
 ];

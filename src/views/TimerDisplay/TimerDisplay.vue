@@ -1,7 +1,7 @@
 <template>
   <div id="timer" class="animated slideInUp">
     <timer-notification :timer-worker="timerWorker" @notification-state="allowNotification"></timer-notification>
-    <audio ref="audio" src="media/foghorn-daniel_simon.mp3">
+    <audio ref="audio" src="audio/foghorn-daniel_simon.mp3">
     </audio>
     <div class="timer">
       <div class="timer-content__values green--text">
