@@ -1,49 +1,85 @@
 <template>
   <div id="app">
-    <v-toolbar class="green" dark>
-      <v-btn icon dark v-show="showBackButton" @click="goBack">
-        <v-icon color="white">arrow_back</v-icon>
-      </v-btn>
-      <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-toolbar>
+    <v-app>
+      <v-toolbar 
+        class="green" 
+        dark>
+        <v-btn 
+          icon 
+          v-show="showBackButton" 
+          dark 
+          @click="goBack">
+          <v-icon color="white">arrow_back</v-icon>
+        </v-btn>
+        <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
+        <v-spacer/>
+      </v-toolbar>
 
-    <v-content fluid class="pa-2">
-      <router-view></router-view>
-    </v-content>
+      <v-content 
+        fluid 
+        class="pa-2">
+        <transition 
+          :duration="90" 
+          mode="out-in" 
+          :enter-active-class="enterClasses" 
+          :leave-active-class="leaveClasses">
+          <router-view />
+        </transition>
+      </v-content>
 
-    <v-tabs v-show="showBottomBar" class="bottom-tabs" v-model="activeTab" light fixed icons centered>
-      <v-tabs-bar class="green">
-        <v-tabs-slider color="yellow"></v-tabs-slider>
-        <v-tabs-item key="home" href="home" @click="navigate('/')">
-          <v-icon color="white">home</v-icon>
-          <span class="white--text">Home</span>
-        </v-tabs-item>
-        <v-tabs-item key="timer" href="timer" @click="navigate('/timer')">
-          <v-icon color="white">timelapse </v-icon>
-          <span class="white--text">Set Timer</span>
-        </v-tabs-item>
-      </v-tabs-bar>
-    </v-tabs>
+      <v-bottom-nav 
+        v-show="showBottomBar" 
+        absolute 
+        :value="true" 
+        :active.sync="activeTab" 
+        color="transparent">
+        <v-btn 
+          flat 
+          color="teal" 
+          value="home" 
+          @click="navigate('/')">
+          <span>Home</span>
+          <v-icon>home</v-icon>
+        </v-btn>
+        <v-btn 
+          flat 
+          color="teal" 
+          value="timer" 
+          @click="navigate('/timer')">
+          <span>Timer</span>
+          <v-icon>timelapse</v-icon>
+        </v-btn>
+      </v-bottom-nav>
+    </v-app>
   </div>
 </template>
 
 <script>
 export default {
-  name: "app",
+  name: "App",
   data() {
     return {
       activeTab: "",
       showBackButton: false,
-      showBottomBar: false
+      showBottomBar: false,
+      enterTransitionName: "",
+      leaveTransitionName: ""
     };
   },
+  computed: {
+    enterClasses() {
+      return `animated ${this.enterTransitionName}`;
+    },
+    leaveClasses() {
+      return `animated ${this.leaveTransitionName}`;
+    }
+  },
   watch: {
-    $route(route) {
-      const { showBackButton, showBottomBar } = route.meta;
+    $route(to) {
+      const { showBackButton, showBottomBar } = to.meta;
       this.showBackButton = showBackButton;
       this.showBottomBar = showBottomBar;
-      this.activeTab = route.name;
+      this.activeTab = to.name;
     }
   },
   methods: {
@@ -51,6 +87,11 @@ export default {
       this.$router.go(-1);
     },
     navigate(state) {
+      this.enterTransitionName =
+        state === "/timer" ? "slideInRight" : "slideInLeft";
+      this.leaveTransitionName =
+        state === "/" ? "slideOutRight" : "slideOutLeft";
+
       this.$router.push(state);
     }
   }

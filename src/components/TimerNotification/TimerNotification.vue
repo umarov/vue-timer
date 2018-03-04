@@ -1,20 +1,49 @@
 <template>
   <div>
-    <v-layout v-if="token" row center justify-space-around class="text-xs-center">
+    <v-layout
+      v-if="token"
+      row
+      center
+      justify-space-around
+      class="text-xs-center">
       <v-flex>
-        <v-btn outline flat color="green" @click.native="subscribeForNotifications()" v-if="notificationAllowed" class="green--text">
+        <v-btn
+          outline
+          flat
+          color="green"
+          @click.native="subscribeForNotifications()"
+          v-if="notificationAllowed"
+          class="green--text">
           Nofitications: On
           <v-icon>notifications</v-icon>
         </v-btn>
-        <v-btn outline flat color="green" @click.native="subscribeForNotifications()" v-else-if="notificationPermission === 'default'" class="grey--text">
+        <v-btn
+          outline
+          flat
+          color="green"
+          @click.native="subscribeForNotifications()"
+          v-else-if="notificationPermission === 'default'"
+          class="grey--text">
           Nofitications: Need permission
           <v-icon>notifications_off</v-icon>
         </v-btn>
-        <v-btn outline flat color="green" @click.native="subscribeForNotifications()" v-else-if="notificationPermission === 'denied'" class="grey--text">
+        <v-btn
+          outline
+          flat
+          color="green"
+          @click.native="subscribeForNotifications()"
+          v-else-if="notificationPermission === 'denied'"
+          class="grey--text">
           Nofitications: Denied
           <v-icon>notifications_off</v-icon>
         </v-btn>
-        <v-btn outline flat color="green" @click.native="subscribeForNotifications()" v-else class="red--text">
+        <v-btn
+          outline
+          flat
+          color="green"
+          @click.native="subscribeForNotifications()"
+          v-else
+          class="red--text">
           Nofitications: Off
           <v-icon>notifications_none</v-icon>
         </v-btn>
@@ -24,10 +53,11 @@
 </template>
 <script>
 export default {
-  name: "timer-notification",
+  name: "TimerNotification",
   props: {
     timerWorker: {
-      type: Worker
+      type: Worker,
+      default: {}
     }
   },
   data() {

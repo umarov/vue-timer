@@ -2,58 +2,33 @@
   <div id="timer-input">
     <div class="time-values">
       <v-container fluid>
-        <v-layout row justify-space-around class="text-xs-center">
-          <v-flex xs4>
-            <span class="time-values__minutes">{{ minutes }}</span>
-            <p class="body-1">Minutes</p>
-          </v-flex>
-
-          <v-flex xs4>
-            <span class="time-values__seconds">{{ seconds }}</span>
-            <p class="body-1">Seconds</p>
-          </v-flex>
+        <v-layout
+          row
+          justify-space-around
+          class="text-xs-center">
+          <code class="time-values__minutes">{{ minutes }}:{{ seconds }}</code>
         </v-layout>
       </v-container>
     </div>
     <div class="time-adjusters">
       <v-container fluid>
-        <v-layout row justify-space-around class="text-xs-center">
-          <div class="time-adjusters_minutes">
-            <v-btn fab
-                   class="green white--text mb-4"
-                   @click.native="increment('minute')"
-                   @mousedown.native="startLongpress(increment, 'minute')"
-                   @mouseup.native="stopLongpress()">
-              <v-icon>add</v-icon>
-            </v-btn>
-
-            <v-btn outline
-                   fab
-                   class="red--text mb-4"
-                   @click.native="decrement('minute')"
-                   @mousedown.native="startLongpress(decrement, 'minute')"
-                   @mouseup.native="stopLongpress()">
-              <v-icon>remove</v-icon>
-            </v-btn>
-          </div>
-
-          <div class="time-adjusters_seconds">
-            <v-btn fab
-                   class="green white--text mb-4"
-                   @click.native="increment('second')"
-                   @mousedown.native="startLongpress(increment, 'second')"
-                   @mouseup.native="stopLongpress()">
-              <v-icon>add</v-icon>
-            </v-btn>
-
-            <v-btn outline
-                   fab
-                   class="red--text mb-4"
-                   @click.native="decrement('second')"
-                   @mousedown.native="startLongpress(decrement, 'second')"
-                   @mouseup.native="stopLongpress()">
-              <v-icon>remove</v-icon>
-            </v-btn>
+        <v-layout
+          row
+          justify-space-around
+          class="text-xs-center">
+          <div class="number-inputs">
+            <v-btn 
+              round 
+              color="blue" 
+              class="white--text" 
+              v-for="number in 9" 
+              @click="addSeconds(number)" 
+              :key="number">{{ number }}</v-btn>
+            <v-btn 
+              class="last-number-input-button white--text" 
+              round 
+              color="blue" 
+              @click="addSeconds(0)">0</v-btn>
           </div>
         </v-layout>
       </v-container>
@@ -61,13 +36,23 @@
 
     <div class="time-submitter">
       <v-container fluid>
-        <v-layout row justify-space-around class="text-xs-center">
+        <v-layout
+          row
+          justify-space-around
+          class="text-xs-center">
           <v-flex xs6>
-            <v-btn flat class="red--text" @click.native="resetValues()">Reset</v-btn>
+            <v-btn
+              flat
+              class="red--text"
+              @click.native="resetValues()">Reset</v-btn>
           </v-flex>
 
           <v-flex xs6>
-            <v-btn raised class="white--text" color="green" @click.native="onTimerAmountSet()">Prepare timer</v-btn>
+            <v-btn
+              raised
+              class="white--text"
+              color="green"
+              @click.native="onTimerAmountSet()">Prepare timer</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -77,7 +62,7 @@
 
 <script>
 export default {
-  name: "timer-input",
+  name: "TimerInput",
   data() {
     return {
       milliseconds: 0,
@@ -129,50 +114,8 @@ export default {
       clearTimeout(this.longPressTimeout);
       this.longPressed = false;
     },
-    increment(type) {
-      switch (type) {
-        case "minute":
-          this.minutes += 1;
-          break;
-        case "second":
-          this.seconds += 1;
-          break;
-        case "millisecond":
-          this.milliseconds += 1;
-          break;
-        default:
-          break;
-      }
-    },
-    decrement(type) {
-      switch (type) {
-        case "minute":
-          if (this.minutes < 1) {
-            this.minutes = 0;
-          } else {
-            this.minutes -= 1;
-          }
-
-          break;
-        case "second":
-          if (this.seconds < 1) {
-            this.seconds = 0;
-          } else {
-            this.seconds -= 1;
-          }
-
-          break;
-        case "millisecond":
-          if (this.milliseconds < 1) {
-            this.milliseconds = 0;
-          } else {
-            this.milliseconds -= 1;
-          }
-
-          break;
-        default:
-          break;
-      }
+    addSeconds(seconds) {
+      this.seconds = +`${this.seconds}${seconds}`;
     },
     onTimerAmountSet() {
       let timerAmountInMillis = this.milliseconds;
@@ -203,7 +146,16 @@ export default {
 
 #timer-input {
   display: grid;
-  grid-template-rows: 30% 30% 30%;
+  grid-template-rows: 1fr 3fr 1fr;
   grid-row-gap: 15px;
+}
+
+.number-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.last-number-input-button {
+  grid-column-start: 2;
 }
 </style>

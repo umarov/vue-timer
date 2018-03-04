@@ -1,6 +1,6 @@
 <template>
-  <div class="timer-container animated fadeInDown">
-    <router-view></router-view>
+  <div class="timer-container">
+    <router-view/>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "timer"
+  name: "Timer"
 });
 </script>
 
