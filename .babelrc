@@ -1,20 +1,5 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
-      "targets": {
-        "browsers": ["last 2 versions"]
-      }
-    }]
-  ],
-  "plugins": [
-    "transform-runtime",
-    "syntax-dynamic-import"
-  ],
-  "env": {
-    "test": {
-      "presets": ["env", "stage-2"],
-      "plugins": ["istanbul"]
-    }
-  }
+    "@vue/app"
+  ]
 }
