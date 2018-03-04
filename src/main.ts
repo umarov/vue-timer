@@ -6,7 +6,6 @@ import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import App from "./App.vue";
 import router from "./router";
-import "./registerServiceWorker.ts";
 
 const config = {
   apiKey: "AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw",
@@ -24,7 +23,9 @@ window.firebaseMessaging = messaging();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("./sw.js");
+      const registration = await navigator.serviceWorker.register("./sw.js", {
+        scope: "./"
+      });
 
       // @ts-ignore
       window.firebaseMessaging.useServiceWorker(registration);
