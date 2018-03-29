@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-layout
-      v-if="token"
       row
       center
       justify-space-around
