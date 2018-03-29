@@ -32,11 +32,14 @@ new Vue({
   },
   created() {
     if ("serviceWorker" in navigator) {
+      console.info("Preparing to register SW");
       this.swRegistration = navigator.serviceWorker
         .register("./sw.js", {
           scope: "./"
         })
         .then(registration => {
+          console.info("SW Registered with ", registration);
+
           this.firebaseMessaging.useServiceWorker(registration);
         })
         .catch(err => {

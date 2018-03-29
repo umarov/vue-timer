@@ -71,7 +71,7 @@ export default {
   async mounted() {
     try {
       await this.$root.swRegistration;
-
+      console.info("Going to get notification tokens");
       this.setupTokens();
     } catch {
       console.error("SW not supported");
@@ -94,6 +94,7 @@ export default {
       });
     },
     onTokenReceived(currentToken) {
+      console.info("Token received", currentToken);
       if (currentToken) {
         this.token = currentToken;
         this.sendTokenToWorker(currentToken);
