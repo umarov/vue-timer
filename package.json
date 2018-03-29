@@ -1,6 +1,6 @@
 {
   "name": "code-shop-timer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -8,31 +8,41 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "firebase": "^4.10.1",
+    "firebase": "^4.12.0",
     "register-service-worker": "^1.1.1",
-    "vue": "^2.5.13",
+    "vue": "^2.5.16",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.0.4"
+    "vuetify": "^1.0.11"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.3",
-    "@vue/cli-plugin-eslint": "^3.0.0-beta.3",
-    "@vue/cli-plugin-pwa": "^3.0.0-beta.3",
-    "@vue/cli-plugin-typescript": "^3.0.0-beta.3",
-    "@vue/cli-service": "^3.0.0-beta.3",
-    "@vue/eslint-config-prettier": "^3.0.0-beta.3",
-    "@vue/eslint-config-typescript": "^3.0.0-beta.3",
+    "@vue/cli-plugin-babel": "^3.0.0-beta.6",
+    "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
+    "@vue/cli-plugin-pwa": "^3.0.0-beta.6",
+    "@vue/cli-plugin-typescript": "^3.0.0-beta.6",
+    "@vue/cli-service": "^3.0.0-beta.6",
+    "@vue/eslint-config-prettier": "^3.0.0-beta.6",
+    "@vue/eslint-config-typescript": "^3.0.0-beta.6",
     "lint-staged": "^7.0.0",
-    "node-sass": "^4.7.2",
+    "node-sass": "^4.8.3",
     "sass-loader": "^6.0.7",
-    "vue-template-compiler": "^2.5.13"
+    "vue-template-compiler": "^2.5.16"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"],
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "{src,public}/**/*.js": ["vue-cli-service lint", "git add"],
-    "src/**/*.vue": ["vue-cli-service lint", "git add"]
+    "{src,public}/**/*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "src/**/*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }

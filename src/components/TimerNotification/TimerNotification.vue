@@ -68,24 +68,25 @@ export default {
       worker: this.timerWorker
     };
   },
-  mounted() {
-    if (window.swRegistration) {
+  async mounted() {
+    try {
+      await this.$root.swRegistration;
+
       this.setupTokens();
-    } else {
-      document.addEventListener("serviceWorkerRegistered", () => {
-        this.setupTokens();
-      });
+    } catch {
+      console.error("SW not supported");
     }
   },
   methods: {
     setupTokens() {
-      window.firebaseMessaging
+      this.$root.firebaseMessaging
         .getToken()
         .then(this.onTokenReceived)
         .catch(this.notificationNotAllowed)
         .then(this.fireEventWithNotificationState);
-      window.firebaseMessaging.onTokenRefresh(() => {
-        window.firebaseMessaging
+
+      this.$root.firebaseMessaging.onTokenRefresh(() => {
+        this.$root.firebaseMessaging
           .getToken()
           .then(this.onTokenReceived)
           .catch(this.notificationNotAllowed)
@@ -114,7 +115,7 @@ export default {
       this.$emit("notification-state", this.getCachedOverride());
     },
     subscribeForNotifications() {
-      window.firebaseMessaging
+      this.$root.firebaseMessaging
         .requestPermission()
         .then(() => {
           this.notificationAllowed = !this.notificationAllowed;

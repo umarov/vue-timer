@@ -17,28 +17,6 @@ const config = {
 };
 
 firebase.initializeApp(config);
-// @ts-ignore
-window.firebaseMessaging = messaging();
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./sw.js", {
-        scope: "./"
-      })
-      .then(registration => {
-        // @ts-ignore
-        window.firebaseMessaging.useServiceWorker(registration);
-        // @ts-ignore
-        window.swRegistration = registration;
-        dispatchEvent(new CustomEvent("serviceWorkerRegistered"));
-      })
-      .catch(err => {
-        console.log("Service Worker registration failed");
-        console.error(err);
-      });
-  });
-}
 
 Vue.config.productionTip = false;
 Vue.use(Vuetify);
@@ -46,5 +24,28 @@ Vue.use(Vuetify);
 new Vue({
   el: "#app",
   router,
+  data() {
+    return {
+      firebaseMessaging: messaging(),
+      swRegistration: {}
+    };
+  },
+  created() {
+    if ("serviceWorker" in navigator) {
+      this.swRegistration = navigator.serviceWorker
+        .register("./sw.js", {
+          scope: "./"
+        })
+        .then(registration => {
+          this.firebaseMessaging.useServiceWorker(registration);
+        })
+        .catch(err => {
+          console.log("Service Worker registration failed");
+          console.error(err);
+        });
+    } else {
+      this.swRegistration = Promise.reject(false);
+    }
+  },
   render: h => h(App)
 });

@@ -1,6 +1,6 @@
 importScripts(
-  "https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js",
-  "https://www.gstatic.com/firebasejs/4.10.1/firebase-messaging.js"
+  "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
 );
 
 workbox.loadModule("workbox-routing");
@@ -31,7 +31,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  "https://www.gstatic.com/firebasejs/4.10.1/(.*)",
+  "https://www.gstatic.com/firebasejs/4.12.0/(.*)",
   workbox.strategies.cacheFirst({
     cacheName: "gstatic",
     cacheableResponse: {

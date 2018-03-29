@@ -86,7 +86,7 @@ export default Vue.extend({
   },
   props: {
     timerAmount: {
-      type: Number,
+      type: [Number, String],
       default: 0
     }
   },
@@ -107,12 +107,10 @@ export default Vue.extend({
       this.timerWorker.postMessage({ checkTimerValue: true });
     });
 
-    setTimeout(() => {
-      // @ts-ignore
-      window.firebaseMessaging.onMessage(() => {
-        this.resetTimer();
-      });
-    }, 100);
+    // @ts-ignore
+    this.$root.firebaseMessaging.onMessage(() => {
+      this.resetTimer();
+    });
 
     this.notificationAllowed = false;
     this.timerWorker.onmessage = event => {

@@ -1,8 +1,8 @@
-importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.271991489d689573b6fd67d252c94143.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.0-beta.1/workbox-sw.js");
+importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.e4f81e6f3b46daf2670383ab223e5945.js", "https://storage.googleapis.com/workbox-cdn/releases/3.0.1/workbox-sw.js");
 
 importScripts(
-  "https://www.gstatic.com/firebasejs/4.10.1/firebase-app.js",
-  "https://www.gstatic.com/firebasejs/4.10.1/firebase-messaging.js"
+  "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
 );
 
 workbox.loadModule("workbox-routing");
@@ -33,7 +33,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  "https://www.gstatic.com/firebasejs/4.10.1/(.*)",
+  "https://www.gstatic.com/firebasejs/4.12.0/(.*)",
   workbox.strategies.cacheFirst({
     cacheName: "gstatic",
     cacheableResponse: {
