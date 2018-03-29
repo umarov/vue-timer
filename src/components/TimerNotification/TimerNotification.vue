@@ -61,39 +61,38 @@ export default {
   },
   data() {
     return {
-      notificationPermission: Notification.permission,
-      notificationAllowed: null,
-      token: null,
+      notificationPermission: "default",
+      notificationAllowed: false,
+      token: "",
       worker: this.timerWorker
     };
   },
   async mounted() {
     try {
+      this.notificationPermission = await Notification.requestPermission();
       await this.$root.swRegistration;
-      console.info("Going to get notification tokens");
       this.setupTokens();
     } catch {
       console.error("SW not supported");
     }
   },
+  watch: {
+    notificationAllowed: "setCachedOverride"
+  },
   methods: {
-    setupTokens() {
-      this.$root.firebaseMessaging
-        .getToken()
-        .then(this.onTokenReceived)
-        .catch(this.notificationNotAllowed)
-        .then(this.fireEventWithNotificationState);
-
-      this.$root.firebaseMessaging.onTokenRefresh(() => {
-        this.$root.firebaseMessaging
-          .getToken()
-          .then(this.onTokenReceived)
-          .catch(this.notificationNotAllowed)
-          .then(this.fireEventWithNotificationState);
-      });
+    async setupTokens() {
+      await this.getToken();
+      this.$root.firebaseMessaging.onTokenRefresh(() => this.getToken());
+    },
+    async getToken() {
+      try {
+        const token = await this.$root.firebaseMessaging.getToken();
+        this.onTokenReceived(token);
+      } catch (err) {
+        this.notificationNotAllowed();
+      }
     },
     onTokenReceived(currentToken) {
-      console.info("Token received", currentToken);
       if (currentToken) {
         this.token = currentToken;
         this.sendTokenToWorker(currentToken);
@@ -114,22 +113,22 @@ export default {
     fireEventWithNotificationState() {
       this.$emit("notification-state", this.getCachedOverride());
     },
-    subscribeForNotifications() {
-      this.$root.firebaseMessaging
-        .requestPermission()
-        .then(() => {
-          this.notificationAllowed = !this.notificationAllowed;
-          this.setCachedOverride(this.notificationAllowed);
-        })
-        .catch(() => {
-          this.setCachedOverride(false);
-        });
+    async subscribeForNotifications() {
+      try {
+        await this.$root.firebaseMessaging.requestPermission();
+        this.notificationAllowed = !this.notificationAllowed;
+      } catch (err) {
+        this.notificationAllowed = false;
+      }
     },
     getCachedOverride() {
-      return localStorage.getItem("notification-override") === "true";
+      return localStorage.getItem("notification-override") === "yes";
     },
     setCachedOverride(notificationOverride) {
-      localStorage.setItem("notification-override", notificationOverride);
+      localStorage.setItem(
+        "notification-override",
+        notificationOverride ? "yes" : "no"
+      );
       this.fireEventWithNotificationState();
     }
   }
