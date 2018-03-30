@@ -33,41 +33,50 @@
             r="147.5"
             stroke-width="5"
             stroke-dasharray="926.77"
-            :stroke-dashoffset="926.77 - (926.77 * percentageForDisplay/100)"
+            :stroke-dashoffset="percentageForDisplay"
             class="progress-circular__overlay"
             style="transition: none;"/>
         </svg>
       </div>
       <div class="timer-buttons">
-        <v-btn
-          light
-          fab
-          outline
-          color="blue"
-          class="btn--light-flat-focused white--text timer-button"
-          @click.native="resetTimer()">
-          <v-icon>loop</v-icon>
-        </v-btn>
-        <v-btn
-          light
-          fab
-          outline
-          color="red"
-          v-if="timerActive"
-          class="btn--light-flat-focused white--text timer-button"
-          @click.native="pauseTimer()">
-          <v-icon>pause_circle_outline</v-icon>
-        </v-btn>
-        <v-btn
-          light
-          fab
-          outline
-          color="green"
-          v-else
-          class="btn--light-flat-focused white--text timer-button"
-          @click.native="startTimer()">
-          <v-icon>play_circle_outline</v-icon>
-        </v-btn>
+        <div>
+          <v-btn
+            light
+            fab
+            outline
+            color="blue"
+            class="btn--light-flat-focused white--text timer-button"
+            @click.native="resetTimer()">
+            <v-icon>stop</v-icon>
+          </v-btn>
+          <p class="text-xs-center subheading blue--text">Stop</p>
+        </div>
+        <div v-if="timerActive">
+          <v-btn
+            light
+            fab
+            outline
+            color="orange"
+            class="btn--light-flat-focused white--text timer-button"
+            @click.native="pauseTimer()">
+            <v-icon>pause_circle_outline</v-icon>
+          </v-btn>
+          <p class="text-xs-center subheading orange--text">Pause</p>
+
+        </div>
+
+        <div v-else>
+          <v-btn
+            light
+            fab
+            outline
+            color="green"
+            class="btn--light-flat-focused white--text timer-button"
+            @click.native="startTimer()">
+            <v-icon>play_circle_outline</v-icon>
+          </v-btn>
+          <p class="text-xs-center subheading green--text">Start</p>
+        </div>
       </div>
     </div>
   </div>
@@ -95,7 +104,7 @@ export default Vue.extend({
       progressSize: 100,
       timerValue: 0,
       percentageForDisplay: 0,
-      fullTimerDisplay: "00:00:00",
+      fullTimerDisplay: "00:00:00:00",
       timerEndTime: 0,
       timerActive: false,
       notificationAllowed: false,
@@ -115,30 +124,31 @@ export default Vue.extend({
     this.notificationAllowed = false;
     this.timerWorker.onmessage = event => {
       if (!document.hidden) {
-        this.$nextTick(() => {
-          const {
-            timerValue,
-            timerEndTime,
-            percentageForDisplay,
-            fullTimerDisplay
-          } = event.data;
+        const {
+          timerValue,
+          percentageForDisplay,
+          fullTimerDisplay
+        } = event.data;
 
-          if (timerValue === 0) {
-            const timeDiff = (Date.now() - timerEndTime) / 10;
-            if (this.notificationAllowed && timeDiff < 10) {
-              const audio = this.$refs.audio as HTMLAudioElement;
-              audio.play();
-            }
-
-            this.resetTimer();
-          } else {
-            requestAnimationFrame(() => {
-              this.percentageForDisplay = percentageForDisplay;
-              this.timerValue = timerValue;
-              this.fullTimerDisplay = fullTimerDisplay;
-            });
+        if (timerValue === 0) {
+          const { timerEndTime } = event.data;
+          const timeDiff = (Date.now() - timerEndTime) / 10;
+          if (this.notificationAllowed && timeDiff < 10) {
+            const audio = this.$refs.audio as HTMLAudioElement;
+            audio.play();
           }
-        });
+
+          this.resetTimer();
+        } else {
+          requestAnimationFrame(() => {
+            this.percentageForDisplay = percentageForDisplay;
+            this.fullTimerDisplay = fullTimerDisplay;
+          });
+
+          setTimeout(() => {
+            this.timerValue = timerValue;
+          }, 0);
+        }
       }
     };
 

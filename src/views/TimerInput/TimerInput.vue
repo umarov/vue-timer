@@ -6,7 +6,7 @@
           row
           justify-space-around
           class="text-xs-center">
-          <code class="time-values__minutes">{{ minutes }}:{{ seconds }}</code>
+          <code class="time-values__minutes">{{ hours }}:{{ minutes }}:{{ seconds }}</code>
         </v-layout>
       </v-container>
     </div>
@@ -17,17 +17,17 @@
           justify-space-around
           class="text-xs-center">
           <div class="number-inputs">
-            <v-btn 
-              round 
-              color="blue" 
-              class="white--text" 
-              v-for="number in 9" 
-              @click="addSeconds(number)" 
+            <v-btn
+              round
+              color="blue"
+              class="white--text"
+              v-for="number in 9"
+              @click="addSeconds(number)"
               :key="number">{{ number }}</v-btn>
-            <v-btn 
-              class="last-number-input-button white--text" 
-              round 
-              color="blue" 
+            <v-btn
+              class="last-number-input-button white--text"
+              round
+              color="blue"
               @click="addSeconds(0)">0</v-btn>
           </div>
         </v-layout>
@@ -60,82 +60,77 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "TimerInput",
   data() {
     return {
-      milliseconds: 0,
-      seconds: 0,
-      minutes: 0,
+      totalNumber: 0,
       longPressed: false,
       longPressTimeout: 0
     };
   },
-  watch: {
-    milliseconds(millisecond) {
-      if (millisecond > 99) {
-        this.seconds += 1;
-        this.milliseconds = millisecond % 100;
-      } else {
-        this.milliseconds = millisecond;
+  computed: {
+    seconds(): string {
+      if (this.totalNumber / 10 < 1) {
+        return `0${this.totalNumber}`;
       }
+
+      const stringNumber = this.totalNumber.toString();
+
+      return stringNumber.substring(stringNumber.length - 2);
     },
-    seconds(second) {
-      if (second > 59) {
-        this.minutes += 1;
-        this.seconds = second % 60;
-      } else {
-        this.seconds = second;
+    minutes(): string {
+      const totalMinutes = Math.floor(this.totalNumber / 100);
+
+      if (totalMinutes / 10 < 1) {
+        return `0${totalMinutes}`;
       }
+
+      const stringNumber = totalMinutes.toString();
+
+      return stringNumber.substring(stringNumber.length - 2);
+    },
+    hours(): string {
+      const totalHours = Math.floor(this.totalNumber / 10000);
+
+      if (totalHours / 10 < 1) {
+        return `0${totalHours}`;
+      }
+
+      return `${totalHours}`;
     }
   },
-  mounted() {},
   destroyed() {
     this.resetValues();
   },
   methods: {
     resetValues() {
-      this.minutes = 0;
-      this.seconds = 0;
-      this.milliseconds = 0;
+      this.totalNumber = 0;
     },
-    startLongpress(action, type, timeoutValue = 1000) {
-      this.longPressed = true;
-
-      this.longPressTimeout = setTimeout(() => {
-        if (this.longPressed) {
-          action(type);
-          this.startLongpress(action, type, timeoutValue * 0.81);
-        }
-      }, timeoutValue * 0.81);
-    },
-    stopLongpress() {
-      clearTimeout(this.longPressTimeout);
-      this.longPressed = false;
-    },
-    addSeconds(seconds) {
-      this.seconds = +`${this.seconds}${seconds}`;
+    addSeconds(value: number) {
+      if (100000 > this.totalNumber) {
+        this.totalNumber = +`${this.totalNumber}${value}`;
+      }
     },
     onTimerAmountSet() {
-      let timerAmountInMillis = this.milliseconds;
-      if (this.seconds > 0) {
-        timerAmountInMillis += this.seconds * 100;
-      }
-
-      if (this.minutes > 0) {
-        timerAmountInMillis += this.minutes * 6000;
-      }
+      const seconds = +this.seconds;
+      const minutes = +this.minutes;
+      const hours = +this.hours;
+      const timerAmountInMillis =
+        seconds * 100 + minutes * 6000 + hours * 3600000;
 
       if (timerAmountInMillis > 0) {
         this.$router.push({
           name: "timer-display",
-          params: { timerAmount: timerAmountInMillis }
+          params: { timerAmount: timerAmountInMillis.toString() }
         });
       }
     }
   }
-};
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

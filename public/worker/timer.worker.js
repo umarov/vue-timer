@@ -9,14 +9,28 @@ let timerEndTime = 0;
 let notification;
 let notificationToken;
 
-const doubleDigitChecker = value => (value.length === 1 ? `0${value}` : value);
-const calculateSeconds = milliseconds =>
-  doubleDigitChecker(`${(milliseconds / 100) % 60}`.split(".")[0]);
-const calculateMinutes = milliseconds =>
-  doubleDigitChecker(`${milliseconds / 6000}`.split(".")[0]);
 const notificationBroadcastChannel = new BroadcastChannel("timerNotification");
 const timerValueBroadcastChannel = new BroadcastChannel("timerValue");
 const restartBroadcastChannel = new BroadcastChannel("timerRestart");
+
+function doubleDigitChecker(value) {
+  return value.length === 1 ? `0${value}` : value;
+}
+function calculateSeconds(milliseconds) {
+  return doubleDigitChecker(`${(milliseconds / 100) % 60}`.split(".")[0]);
+}
+
+function calculateMinutes(milliseconds) {
+  return doubleDigitChecker(`${(milliseconds / 6000) % 60}`.split(".")[0]);
+}
+
+function calculateHours(milliseconds) {
+  return doubleDigitChecker(`${milliseconds / 3600000}`.split(".")[0]);
+}
+
+function calculatePercentageForDisplay(percentage) {
+  return 926.77 - 926.77 * percentage / 100;
+}
 
 function startTimer(timerAmount, notificationAllowed, fullAmount) {
   timerValue = timerAmount;
@@ -26,6 +40,7 @@ function startTimer(timerAmount, notificationAllowed, fullAmount) {
   }
 
   return setInterval(() => {
+    const percentage = timerValue / fullAmount * 100;
     if (timerValue < 2) {
       timerValue = 0;
       timerEndTime = Date.now();
@@ -40,7 +55,7 @@ function startTimer(timerAmount, notificationAllowed, fullAmount) {
 
       postMessage({
         timerValue,
-        percentageForDisplay: timerValue / fullAmount * 100,
+        percentageForDisplay: calculatePercentageForDisplay(percentage),
         fullTimerDisplay: makeFullTimerDisplay(timerValue),
         timerEndTime
       });
@@ -50,7 +65,7 @@ function startTimer(timerAmount, notificationAllowed, fullAmount) {
 
       postMessage({
         timerValue,
-        percentageForDisplay: timerValue / fullAmount * 100,
+        percentageForDisplay: calculatePercentageForDisplay(percentage),
         fullTimerDisplay: makeFullTimerDisplay(timerValue)
       });
     }
@@ -70,7 +85,7 @@ function makeRequestForPushNotification(timerAmount) {
       timerAmount,
       notificationToken
     })
-  }).catch(response => console.log(JSON.stringify(response)));
+  }).catch(response => console.error(JSON.stringify(response)));
 }
 
 timerValueBroadcastChannel.onmessage = () => {
@@ -109,7 +124,7 @@ self.onmessage = event => {
     postMessage({
       timerValue,
       fullTimerDisplay: makeFullTimerDisplay(timerValue),
-      percentageForDisplay: 100
+      percentageForDisplay: calculatePercentageForDisplay(100)
     });
     clearInterval(intervalId);
   } else if (data.setNotificationToken) {
@@ -119,7 +134,9 @@ self.onmessage = event => {
       timerValue,
       fullTimerDisplay: makeFullTimerDisplay(timerValue),
       timerEndTime,
-      percentageForDisplay: timerValue / event.data.timerAmount * 100
+      percentageForDisplay: calculatePercentageForDisplay(
+        timerValue / event.data.timerAmount * 100
+      )
     });
   } else {
     clearInterval(intervalId);
@@ -127,7 +144,9 @@ self.onmessage = event => {
 };
 
 function makeFullTimerDisplay(timerValue) {
-  return `${calculateMinutes(timerValue)}:${calculateSeconds(
+  return `${calculateHours(timerValue)}:${calculateMinutes(
     timerValue
-  )}:${doubleDigitChecker(`${timerValue % 100}`)}`;
+  )}:${calculateSeconds(timerValue)}:${doubleDigitChecker(
+    `${timerValue % 100}`
+  )}`;
 }

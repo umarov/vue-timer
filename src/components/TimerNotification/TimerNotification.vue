@@ -69,7 +69,7 @@ export default {
   },
   async mounted() {
     try {
-      this.notificationPermission = await Notification.requestPermission();
+      this.notificationPermission = Notification.permission;
       await this.$root.swRegistration;
       this.setupTokens();
     } catch {
