@@ -1,9 +1,12 @@
-importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.8de5693a377273eb7d15157cdfaf31bb.js", "https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
+importScripts("https://umarov.github.io/code-shop-timer/wb-manifest.2796ebf909b1dd0e6a19b5e8879fbcd6.js", "https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
 
 importScripts(
   "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
   "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
 );
+
+workbox.skipWaiting();
+workbox.clientsClaim();
 
 const config = {
   apiKey: "AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw",
@@ -35,13 +38,6 @@ workbox.routing.registerRoute(
   /.*(?:cloudflare)\.com.*$/,
   workbox.strategies.staleWhileRevalidate({
     cacheName: "cloudflare"
-  })
-);
-
-workbox.routing.registerRoute(
-  /\.(?:js|css)$/,
-  workbox.strategies.staleWhileRevalidate({
-    cacheName: "static-resources"
   })
 );
 
@@ -130,4 +126,6 @@ const prepareAndSendNotification = () => {
 };
 
 messaging.setBackgroundMessageHandler(prepareAndSendNotification);
+
+workbox.precaching.precacheAndRoute(self.__precacheManifest);
 

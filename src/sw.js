@@ -3,6 +3,9 @@ importScripts(
   "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
 );
 
+workbox.skipWaiting();
+workbox.clientsClaim();
+
 const config = {
   apiKey: "AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw",
   authDomain: "codeshoptimer.firebaseapp.com",
@@ -33,13 +36,6 @@ workbox.routing.registerRoute(
   /.*(?:cloudflare)\.com.*$/,
   workbox.strategies.staleWhileRevalidate({
     cacheName: "cloudflare"
-  })
-);
-
-workbox.routing.registerRoute(
-  /\.(?:js|css)$/,
-  workbox.strategies.staleWhileRevalidate({
-    cacheName: "static-resources"
   })
 );
 
@@ -128,3 +124,5 @@ const prepareAndSendNotification = () => {
 };
 
 messaging.setBackgroundMessageHandler(prepareAndSendNotification);
+
+workbox.precaching.precacheAndRoute(self.__precacheManifest);

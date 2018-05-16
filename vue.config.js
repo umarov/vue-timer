@@ -8,7 +8,8 @@ module.exports = {
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
       swSrc: "src/sw.js",
-      swDest: "sw.js"
+      swDest: "sw.js",
+      precacheManifestFilename: "wb-manifest.[manifestHash].js"
     }
   },
   configureWebpack: config => {

@@ -56,12 +56,12 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/img/check.png"
   },
   {
-    "revision": "59d095f397c7a5b9f387fd072fdeee41",
-    "url": "https://umarov.github.io/code-shop-timer/img/timer.png"
-  },
-  {
     "revision": "82b9c7a5a3f405032b1db71a25f67021",
     "url": "https://umarov.github.io/code-shop-timer/img/logo.png"
+  },
+  {
+    "revision": "59d095f397c7a5b9f387fd072fdeee41",
+    "url": "https://umarov.github.io/code-shop-timer/img/timer.png"
   },
   {
     "revision": "4b91fc11b6c9ae63a3a2",
