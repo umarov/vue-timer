@@ -42,7 +42,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  "https://unpkg.com/workbox-sw@3.0.0-(*)/build/importScripts/(.*)",
+  "https://storage.googleapis.com/workbox-cdn/releases/(*)",
   workbox.strategies.cacheFirst({
     cacheName: "gstatic",
     cacheableResponse: {

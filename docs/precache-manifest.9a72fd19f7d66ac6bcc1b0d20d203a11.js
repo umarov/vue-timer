@@ -44,16 +44,16 @@ self.__precacheManifest = [
     "url": "https://umarov.github.io/code-shop-timer/js/app.74596f6a.js"
   },
   {
-    "revision": "2cba9763c59f503b1fe1bb93534ab371",
+    "revision": "45ce6aedf4eec3bcfcf28bfbe142b0be",
     "url": "https://umarov.github.io/code-shop-timer/index.html"
-  },
-  {
-    "revision": "b4bd011ceb512601ab58241421fb066a",
-    "url": "https://umarov.github.io/code-shop-timer/img/check.png"
   },
   {
     "revision": "82b9c7a5a3f405032b1db71a25f67021",
     "url": "https://umarov.github.io/code-shop-timer/img/logo.png"
+  },
+  {
+    "revision": "b4bd011ceb512601ab58241421fb066a",
+    "url": "https://umarov.github.io/code-shop-timer/img/check.png"
   },
   {
     "revision": "6e1d12486b5dd46b5660",

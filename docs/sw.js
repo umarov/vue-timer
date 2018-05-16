@@ -1,4 +1,4 @@
-importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.5e0884eb2ab46da6f30f1ceec9bfbe8d.js", "https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
+importScripts("https://umarov.github.io/code-shop-timer/precache-manifest.9a72fd19f7d66ac6bcc1b0d20d203a11.js", "https://storage.googleapis.com/workbox-cdn/releases/3.2.0/workbox-sw.js");
 
 importScripts(
   "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
@@ -44,7 +44,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-  "https://unpkg.com/workbox-sw@3.0.0-(*)/build/importScripts/(.*)",
+  "https://storage.googleapis.com/workbox-cdn/releases/(*)",
   workbox.strategies.cacheFirst({
     cacheName: "gstatic",
     cacheableResponse: {
