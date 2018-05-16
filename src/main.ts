@@ -33,7 +33,7 @@ new Vue({
   created() {
     if ("serviceWorker" in navigator) {
       this.swRegistration = navigator.serviceWorker
-        .register("./sw.js", {
+        .register("sw.js", {
           scope: "./"
         })
         .then(registration => {

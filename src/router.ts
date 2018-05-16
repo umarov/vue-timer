@@ -1,14 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-const Timer = () =>
-  import(/* webpackChunkName: "timer-home" */ "@/views/Timer/Timer.vue");
-const TimerHome = () =>
-  import(/* webpackChunkName: "timer-home" */ "@/views/TimerHome/TimerHome.vue");
-const TimerInput = () =>
-  import(/* webpackChunkName: "timer-input" */ "@/views/TimerInput/TimerInput.vue");
-const TimerDisplay = () =>
-  import(/* webpackChunkName: "timer-display" */ "@/views/TimerDisplay/TimerDisplay.vue");
+const Timer = () => import("@/views/Timer/Timer.vue");
+const TimerHome = () => import("@/views/TimerHome/TimerHome.vue");
+const TimerInput = () => import("@/views/TimerInput/TimerInput.vue");
+const TimerDisplay = () => import("@/views/TimerDisplay/TimerDisplay.vue");
 
 Vue.use(Router);
 
