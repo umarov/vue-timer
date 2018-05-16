@@ -19,6 +19,11 @@ firebase.initializeApp(config);
 const messaging = firebase.messaging();
 
 workbox.routing.registerRoute(
+  new RegExp("https://umarov.github.io/code-shop-timer"),
+  workbox.strategies.staleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
   /.*(?:googleapis)\.com.*$/,
   workbox.strategies.staleWhileRevalidate({
     cacheName: "googleapis"
