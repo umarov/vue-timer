@@ -3,10 +3,6 @@ importScripts(
   "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
 );
 
-workbox.loadModule("workbox-routing");
-workbox.loadModule("workbox-strategies");
-workbox.loadModule("workbox-precaching");
-
 const config = {
   apiKey: "AIzaSyBvvpU-ld3jS3Fq7JcleH_a77HlVtH9TOw",
   authDomain: "codeshoptimer.firebaseapp.com",
@@ -20,57 +16,23 @@ firebase.initializeApp(config);
 const messaging = firebase.messaging();
 
 workbox.routing.registerRoute(
-  "https://fonts.googleapis.com/(.*)",
-  workbox.strategies.cacheFirst({
-    cacheName: "googleapis",
-    cacheableResponse: {
-      statuses: [0, 200]
-    },
-    networkTimeoutSeconds: 4
+  /.*(?:googleapis)\.com.*$/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "googleapis"
   })
 );
 
 workbox.routing.registerRoute(
-  "https://www.gstatic.com/firebasejs/4.12.0/(.*)",
-  workbox.strategies.cacheFirst({
-    cacheName: "gstatic",
-    cacheableResponse: {
-      statuses: [0, 200]
-    },
-    networkTimeoutSeconds: 4
+  /.*(?:gstatic)\.com.*$/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "gstatic"
   })
 );
 
 workbox.routing.registerRoute(
-  "https://storage.googleapis.com/workbox-cdn/releases/(*)",
-  workbox.strategies.cacheFirst({
-    cacheName: "gstatic",
-    cacheableResponse: {
-      statuses: [0, 200]
-    },
-    networkTimeoutSeconds: 4
-  })
-);
-
-workbox.routing.registerRoute(
-  "https://fonts.gstatic.com/(.*)",
-  workbox.strategies.cacheFirst({
-    cacheName: "gstatic",
-    cacheableResponse: {
-      statuses: [0, 200]
-    },
-    networkTimeoutSeconds: 4
-  })
-);
-
-workbox.routing.registerRoute(
-  "https://cdnjs.cloudflare.com/ajax/libs/animate.css(.*)",
-  workbox.strategies.cacheFirst({
-    cacheName: "gstatic",
-    cacheableResponse: {
-      statuses: [0, 200]
-    },
-    networkTimeoutSeconds: 4
+  /.*(?:cloudflare)\.com.*$/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "cloudflare"
   })
 );
 
