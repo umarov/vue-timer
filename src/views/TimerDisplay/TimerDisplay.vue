@@ -83,36 +83,36 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 let audio: HTMLAudioElement;
 
 export default Vue.extend({
-  name: "TimerDisplay",
+  name: 'TimerDisplay',
   components: {
-    "timer-notification": () =>
-      import("@/components/TimerNotification/TimerNotification.vue")
+    'timer-notification': () =>
+      import('@/components/TimerNotification/TimerNotification.vue'),
   },
   props: {
     timerAmount: {
       type: [Number, String],
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
       progressSize: 100,
       timerValue: 0,
       percentageForDisplay: 0,
-      fullTimerDisplay: "00:00:00:00",
+      fullTimerDisplay: '00:00:00:00',
       timerEndTime: 0,
       timerActive: false,
       notificationAllowed: false,
-      timerWorker: new Worker("./worker/timer.worker.js")
+      timerWorker: new Worker('./worker/timer.worker.js'),
     };
   },
   created() {
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       this.timerWorker.postMessage({ checkTimerValue: true });
     });
 
@@ -122,12 +122,12 @@ export default Vue.extend({
     });
 
     this.notificationAllowed = false;
-    this.timerWorker.onmessage = event => {
+    this.timerWorker.onmessage = (event) => {
       if (!document.hidden) {
         const {
           timerValue,
           percentageForDisplay,
-          fullTimerDisplay
+          fullTimerDisplay,
         } = event.data;
 
         if (timerValue === 0) {
@@ -159,38 +159,38 @@ export default Vue.extend({
     };
 
     const mediaQueryLists = [
-      { query: window.matchMedia("(min-width: 950px)"), size: "600" },
-      { query: window.matchMedia("(max-width: 949px)"), size: "450" },
-      { query: window.matchMedia("(min-width: 600px)"), size: "450" },
-      { query: window.matchMedia("(max-width: 599px)"), size: "400" },
-      { query: window.matchMedia("(min-width: 426px)"), size: "380" },
-      { query: window.matchMedia("(max-width: 425px)"), size: "350" },
-      { query: window.matchMedia("(min-width: 321px)"), size: "280" },
-      { query: window.matchMedia("(max-width: 320px)"), size: "250" }
+      { query: window.matchMedia('(min-width: 950px)'), size: '600' },
+      { query: window.matchMedia('(max-width: 949px)'), size: '450' },
+      { query: window.matchMedia('(min-width: 600px)'), size: '450' },
+      { query: window.matchMedia('(max-width: 599px)'), size: '400' },
+      { query: window.matchMedia('(min-width: 426px)'), size: '380' },
+      { query: window.matchMedia('(max-width: 425px)'), size: '350' },
+      { query: window.matchMedia('(min-width: 321px)'), size: '280' },
+      { query: window.matchMedia('(max-width: 320px)'), size: '250' },
     ];
 
-    mediaQueryLists.map(mqlObj =>
-      mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size))
+    mediaQueryLists.map((mqlObj) =>
+      mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size)),
     );
-    mediaQueryLists.map(mqlObj =>
-      matchUpdater.bind(this)(mqlObj.size)(mqlObj.query)
+    mediaQueryLists.map((mqlObj) =>
+      matchUpdater.bind(this)(mqlObj.size)(mqlObj.query),
     );
 
     this.timerWorker.postMessage({
       resetTimer: true,
       timerAmount: this.timerAmount,
-      fullAmount: this.timerAmount
+      fullAmount: this.timerAmount,
     });
     this.timerActive = false;
 
     setTimeout(() => {
       const circularOverlay: HTMLDivElement = document.querySelector(
-        ".progress-circular__overlay"
+        '.progress-circular__overlay',
       ) as HTMLDivElement;
 
       if (circularOverlay) {
-        circularOverlay.style.transition = "none";
-        circularOverlay.style.color = "#4caf50";
+        circularOverlay.style.transition = 'none';
+        circularOverlay.style.color = '#4caf50';
       }
     }, 500);
   },
@@ -211,7 +211,7 @@ export default Vue.extend({
           startTimer: true,
           timerAmount: this.timerAmount,
           fullAmount: this.timerAmount,
-          notificationAllowed: this.notificationAllowed
+          notificationAllowed: this.notificationAllowed,
         });
       } else {
         this.resumeTimer();
@@ -223,7 +223,7 @@ export default Vue.extend({
       this.timerWorker.postMessage({
         startTimer: true,
         timerAmount: this.timerValue,
-        fullAmount: this.timerAmount
+        fullAmount: this.timerAmount,
       });
     },
     pauseTimer(): void {
@@ -237,13 +237,13 @@ export default Vue.extend({
       this.timerWorker.postMessage({
         resetTimer: true,
         timerAmount: this.timerAmount,
-        fullAmount: this.timerAmount
+        fullAmount: this.timerAmount,
       });
     },
     allowNotification(notificationValue: boolean): void {
       this.notificationAllowed = notificationValue;
-    }
-  }
+    },
+  },
 });
 </script>
 

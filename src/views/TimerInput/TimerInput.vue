@@ -61,15 +61,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "TimerInput",
+  name: 'TimerInput',
   data() {
     return {
       totalNumber: 0,
       longPressed: false,
-      longPressTimeout: 0
+      longPressTimeout: 0,
     };
   },
   computed: {
@@ -101,7 +101,7 @@ export default Vue.extend({
       }
 
       return `${totalHours}`;
-    }
+    },
   },
   destroyed() {
     this.resetValues();
@@ -124,12 +124,12 @@ export default Vue.extend({
 
       if (timerAmountInMillis > 0) {
         this.$router.push({
-          name: "timer-display",
-          params: { timerAmount: timerAmountInMillis.toString() }
+          name: 'timer-display',
+          params: { timerAmount: timerAmountInMillis.toString() },
         });
       }
-    }
-  }
+    },
+  },
 });
 </script>
 

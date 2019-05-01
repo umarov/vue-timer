@@ -1,9 +1,10 @@
 import * as functions from 'firebase-functions';
 import axios from 'axios';
+import * as baseCors from 'cors';
 
 const whitelist = ['http://localhost:8080', 'http://umarov.github.io', 'https://umarov.github.io'];
-const cors = require('cors')({
-  origin: function(origin, callback) {
+const cors = baseCors({
+  origin(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -40,13 +41,17 @@ function makeNotificationRequest(timerAmount, notificationToken) {
     priority: 'high',
   };
 
-  return axios.post('https://fcm.googleapis.com/fcm/send', {
-    to: notificationToken,
-    message: notificationPayload,
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `key=${functions.config().gcmpushnotification.key}`,
-    }
-  });
+  return axios.post(
+    'https://fcm.googleapis.com/fcm/send',
+    {
+      to: notificationToken,
+      message: notificationPayload,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `key=${functions.config().gcmpushnotification.key}`,
+      },
+    },
+  );
 }

@@ -1,4 +1,7 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/code-shop-timer/'
+    : '/',
   pwa: {
     name: "Code Shop Timer",
     themeColor: "#4DBA87",
@@ -12,15 +15,4 @@ module.exports = {
       precacheManifestFilename: "wb-manifest.[manifestHash].js"
     }
   },
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === "production") {
-      return {
-        output: {
-          publicPath: "https://umarov.github.io/code-shop-timer/"
-        }
-      };
-    } else {
-      return {};
-    }
-  }
 };

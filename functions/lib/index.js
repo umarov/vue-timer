@@ -10,9 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const axios_1 = require("axios");
+const baseCors = require("cors");
 const whitelist = ['http://localhost:8080', 'http://umarov.github.io', 'https://umarov.github.io'];
-const cors = require('cors')({
-    origin: function (origin, callback) {
+const cors = baseCors({
+    origin(origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true);
         }
@@ -55,8 +56,8 @@ function makeNotificationRequest(timerAmount, notificationToken) {
     }, {
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `key=${functions.config().gcmpushnotification.key}`,
-        }
+            'Authorization': `key=${functions.config().gcmpushnotification.key}`,
+        },
     });
 }
 //# sourceMappingURL=index.js.map

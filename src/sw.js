@@ -1,6 +1,6 @@
 importScripts(
-  "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
-  "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
+  "https://www.gstatic.com/firebasejs/5.8.2/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/5.8.2/firebase-messaging.js"
 );
 
 workbox.skipWaiting();
