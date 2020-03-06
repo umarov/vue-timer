@@ -1,12 +1,10 @@
 <template>
-  <div
-    id="timer">
+  <div id="timer">
     <timer-notification
       :timer-worker="timerWorker"
-      @notification-state="allowNotification"/>
-    <audio
-      ref="audio"
-      src="audio/foghorn-daniel_simon.mp3"/>
+      @notification-state="allowNotification"
+    />
+    <audio ref="audio" src="audio/foghorn-daniel_simon.mp3" />
     <div class="timer">
       <div class="timer-content__values green--text">
         {{ fullTimerDisplay }}
@@ -16,7 +14,8 @@
           xmlns="http://www.w3.org/2000/svg"
           height="300"
           width="300"
-          style="transform: rotate(-90deg);">
+          style="transform: rotate(-90deg);"
+        >
           <circle
             fill="transparent"
             cx="150"
@@ -25,7 +24,8 @@
             stroke-width="5"
             stroke-dasharray="926.77"
             stroke-dashoffset="0"
-            class="progress-circular__underlay"/>
+            class="progress-circular__underlay"
+          />
           <circle
             fill="transparent"
             cx="150"
@@ -35,7 +35,8 @@
             stroke-dasharray="926.77"
             :stroke-dashoffset="percentageForDisplay"
             class="progress-circular__overlay"
-            style="transition: none;"/>
+            style="transition: none;"
+          />
         </svg>
       </div>
       <div class="timer-buttons">
@@ -43,39 +44,47 @@
           <v-btn
             light
             fab
-            outline
+            outlined
             color="blue"
             class="btn--light-flat-focused white--text timer-button"
-            @click.native="resetTimer()">
+            @click.native="resetTimer()"
+          >
             <v-icon>stop</v-icon>
           </v-btn>
-          <p class="text-xs-center subheading blue--text">Stop</p>
+          <p class="text-center subheading blue--text">
+            Stop
+          </p>
         </div>
         <div v-if="timerActive">
           <v-btn
             light
             fab
-            outline
+            outlined
             color="orange"
             class="btn--light-flat-focused white--text timer-button"
-            @click.native="pauseTimer()">
+            @click.native="pauseTimer()"
+          >
             <v-icon>pause_circle_outline</v-icon>
           </v-btn>
-          <p class="text-xs-center subheading orange--text">Pause</p>
-
+          <p class="text-center subheading orange--text">
+            Pause
+          </p>
         </div>
 
         <div v-else>
           <v-btn
             light
             fab
-            outline
+            outlined
             color="green"
             class="btn--light-flat-focused white--text timer-button"
-            @click.native="startTimer()">
+            @click.native="startTimer()"
+          >
             <v-icon>play_circle_outline</v-icon>
           </v-btn>
-          <p class="text-xs-center subheading green--text">Start</p>
+          <p class="text-center subheading green--text">
+            Start
+          </p>
         </div>
       </div>
     </div>
@@ -84,8 +93,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-let audio: HTMLAudioElement;
+import { firebaseMessaging } from "../../firebaseMessaging";
 
 export default Vue.extend({
   name: "TimerDisplay",
@@ -116,8 +124,7 @@ export default Vue.extend({
       this.timerWorker.postMessage({ checkTimerValue: true });
     });
 
-    // @ts-ignore
-    this.$root.firebaseMessaging.onMessage(() => {
+    firebaseMessaging.onMessage(() => {
       this.resetTimer();
     });
 
@@ -152,7 +159,9 @@ export default Vue.extend({
       }
     };
 
-    const matchUpdater = (size: number) => (mediaQueryList: MediaQueryList) => {
+    const matchUpdater = (size: number) => (
+      mediaQueryList: MediaQueryList | MediaQueryListEvent
+    ) => {
       if (mediaQueryList.matches) {
         this.progressSize = size;
       }
@@ -170,10 +179,11 @@ export default Vue.extend({
     ];
 
     mediaQueryLists.map(mqlObj =>
-      mqlObj.query.addListener(matchUpdater.bind(this)(mqlObj.size))
+      mqlObj.query.addListener(matchUpdater.bind(this)(+mqlObj.size))
     );
+
     mediaQueryLists.map(mqlObj =>
-      matchUpdater.bind(this)(mqlObj.size)(mqlObj.query)
+      matchUpdater.bind(this)(+mqlObj.size)(mqlObj.query)
     );
 
     this.timerWorker.postMessage({

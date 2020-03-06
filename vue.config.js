@@ -8,19 +8,14 @@ module.exports = {
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
       swSrc: "src/sw.js",
-      swDest: "sw.js",
-      precacheManifestFilename: "wb-manifest.[manifestHash].js"
+      importScripts: [
+        "https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js",
+        "https://www.gstatic.com/firebasejs/7.9.3/firebase-messaging.js"
+      ]
     }
   },
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === "production") {
-      return {
-        output: {
-          publicPath: "https://umarov.github.io/code-shop-timer/"
-        }
-      };
-    } else {
-      return {};
-    }
-  }
+  publicPath:
+    process.env.NODE_ENV === "production"
+      ? "https://umarov.dev/code-shop-timer/"
+      : "/"
 };

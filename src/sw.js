@@ -1,8 +1,3 @@
-importScripts(
-  "https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js",
-  "https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"
-);
-
 workbox.skipWaiting();
 workbox.clientsClaim();
 
@@ -15,11 +10,8 @@ const config = {
   messagingSenderId: "222344146536"
 };
 
-firebase.initializeApp(config);
-const messaging = firebase.messaging();
-
 workbox.routing.registerRoute(
-  new RegExp("https://umarov.github.io/code-shop-timer"),
+  new RegExp("https://umarov.dev/code-shop-timer"),
   workbox.strategies.staleWhileRevalidate()
 );
 
@@ -128,6 +120,8 @@ const prepareAndSendNotification = () => {
   );
 };
 
+self.firebase.initializeApp(config);
+const messaging = self.firebase.messaging();
 messaging.setBackgroundMessageHandler(prepareAndSendNotification);
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest);

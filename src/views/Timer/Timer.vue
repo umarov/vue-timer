@@ -1,6 +1,6 @@
 <template>
   <div class="timer-container">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

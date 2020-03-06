@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import axios from 'axios';
 
-const whitelist = ['http://localhost:8080', 'http://umarov.github.io', 'https://umarov.github.io'];
+const whitelist = ['http://localhost:8080', 'http://umarov.github.io', 'https://umarov.github.io', 'https://umarov.dev'];
 const cors = require('cors')({
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {

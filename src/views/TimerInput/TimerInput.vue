@@ -2,33 +2,35 @@
   <div id="timer-input">
     <div class="time-values">
       <v-container fluid>
-        <v-layout
-          row
-          justify-space-around
-          class="text-xs-center">
-          <code class="time-values__minutes">{{ hours }}:{{ minutes }}:{{ seconds }}</code>
+        <v-layout row justify-space-around class="text-center">
+          <code class="time-values__minutes"
+            >{{ hours }}:{{ minutes }}:{{ seconds }}</code
+          >
         </v-layout>
       </v-container>
     </div>
     <div class="time-adjusters">
       <v-container fluid>
-        <v-layout
-          row
-          justify-space-around
-          class="text-xs-center">
+        <v-layout row justify-space-around class="text-center">
           <div class="number-inputs">
             <v-btn
-              round
+              rounded
               color="blue"
               class="white--text"
               v-for="number in 9"
               @click="addSeconds(number)"
-              :key="number">{{ number }}</v-btn>
+              :key="number"
+            >
+              {{ number }}
+            </v-btn>
             <v-btn
               class="last-number-input-button white--text"
-              round
+              rounded
               color="blue"
-              @click="addSeconds(0)">0</v-btn>
+              @click="addSeconds(0)"
+            >
+              0
+            </v-btn>
           </div>
         </v-layout>
       </v-container>
@@ -36,24 +38,19 @@
 
     <div class="time-submitter">
       <v-container fluid>
-        <v-layout
-          row
-          justify-space-around
-          class="text-xs-center">
-          <v-flex xs6>
-            <v-btn
-              flat
-              class="red--text"
-              @click.native="resetValues()">Reset</v-btn>
-          </v-flex>
+        <v-layout class="d-flex justify-space-around">
+          <v-btn text class="red--text" @click.native="resetValues()">
+            Reset
+          </v-btn>
 
-          <v-flex xs6>
-            <v-btn
-              raised
-              class="white--text"
-              color="green"
-              @click.native="onTimerAmountSet()">Prepare timer</v-btn>
-          </v-flex>
+          <v-btn
+            raised
+            class="white--text"
+            color="green"
+            @click.native="onTimerAmountSet()"
+          >
+            Prepare timer
+          </v-btn>
         </v-layout>
       </v-container>
     </div>
@@ -111,7 +108,7 @@ export default Vue.extend({
       this.totalNumber = 0;
     },
     addSeconds(value: number) {
-      if (100000 > this.totalNumber) {
+      if (this.totalNumber < 100000) {
         this.totalNumber = +`${this.totalNumber}${value}`;
       }
     },
@@ -142,12 +139,12 @@ export default Vue.extend({
 #timer-input {
   display: grid;
   grid-template-rows: 1fr 3fr 1fr;
-  grid-row-gap: 15px;
 }
 
 .number-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
 }
 
 .last-number-input-button {

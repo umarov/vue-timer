@@ -1,0 +1,23 @@
+module.exports = {
+  root: true,
+  env: {
+    node: true
+  },
+  globals: {
+    workbox: "readonly"
+  },
+  extends: [
+    "plugin:vue/strongly-recommended",
+    "eslint:recommended",
+    "@vue/typescript/recommended",
+    "@vue/prettier",
+    "@vue/prettier/@typescript-eslint"
+  ],
+  parserOptions: {
+    ecmaVersion: 2020
+  },
+  rules: {
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "warn",
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "warn"
+  }
+};

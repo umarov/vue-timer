@@ -1,55 +1,43 @@
 <template>
   <div id="app">
     <v-app>
-      <v-toolbar 
-        class="green" 
-        dark>
-        <v-btn 
-          icon 
-          v-show="showBackButton" 
-          dark 
-          @click="goBack">
-          <v-icon color="white">arrow_back</v-icon>
+      <v-app-bar app color="green" dark>
+        <v-btn icon v-show="showBackButton" dark @click="goBack">
+          <v-icon>arrow_back</v-icon>
         </v-btn>
-        <v-toolbar-title class="white--text">Code Shop Timer</v-toolbar-title>
-        <v-spacer/>
-      </v-toolbar>
 
-      <v-content 
-        fluid 
-        class="pa-2">
-        <transition 
-          :duration="90" 
-          mode="out-in" 
-          :enter-active-class="enterClasses" 
-          :leave-active-class="leaveClasses">
+        <v-toolbar-title>Timer</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+      </v-app-bar>
+
+      <v-content fluid class="pa-2 mt-12">
+        <transition
+          :duration="90"
+          mode="out-in"
+          :enter-active-class="enterClasses"
+          :leave-active-class="leaveClasses"
+        >
           <router-view />
         </transition>
       </v-content>
 
-      <v-bottom-nav 
-        v-show="showBottomBar" 
-        absolute 
-        :value="true" 
-        :active.sync="activeTab" 
-        color="transparent">
-        <v-btn 
-          flat 
-          color="teal" 
-          value="home" 
-          @click="navigate('/')">
+      <v-bottom-navigation
+        v-show="showBottomBar"
+        absolute
+        :value="true"
+        v-model="activeTab"
+        color="transparent"
+      >
+        <v-btn text color="teal" value="home" @click="navigate('/')">
           <span>Home</span>
           <v-icon>home</v-icon>
         </v-btn>
-        <v-btn 
-          flat 
-          color="teal" 
-          value="timer" 
-          @click="navigate('/timer')">
+        <v-btn text color="teal" value="timer" @click="navigate('/timer')">
           <span>Timer</span>
           <v-icon>timelapse</v-icon>
         </v-btn>
-      </v-bottom-nav>
+      </v-bottom-navigation>
     </v-app>
   </div>
 </template>
