@@ -16,6 +16,6 @@ module.exports = {
   },
   publicPath:
     process.env.NODE_ENV === "production"
-      ? "https://umarov.dev/code-shop-timer/"
+      ? "https://umarov.dev/vue-timer/"
       : "/"
 };
