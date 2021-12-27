@@ -1,4 +1,4 @@
-importScripts("https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js", "https://www.gstatic.com/firebasejs/7.9.3/firebase-messaging.js", "https://umarov.dev/code-shop-timer/precache-manifest.57dd0fa3c56577be0ed2740534978416.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js", "https://www.gstatic.com/firebasejs/7.9.3/firebase-messaging.js", "https://umarov.dev/vue-timer/precache-manifest.016f8ecd81f8086273e5888de29f8e96.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 workbox.skipWaiting();
 workbox.clientsClaim();
